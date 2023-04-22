@@ -11,8 +11,8 @@ part 'base_drip.dart';
 abstract class Drip<DState> extends _BaseDrip<DState> {
   Drip(
     DState initialState, {
-    List<BaseInterceptor<DState>> pipettes = const [],
-  }) : super(initialState, pipettes);
+    List<BaseInterceptor<DState>> interceptors = const [],
+  }) : super(initialState, interceptors);
 
   @override
   Stream<DState> mutableStateOf(DripEvent event) async* {}

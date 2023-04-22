@@ -1,7 +1,7 @@
 part of 'drip.dart';
 
 abstract class _BaseDrip<DState> {
-  _BaseDrip(this._initialState, [this._pipettes = const []]) {
+  _BaseDrip(this._initialState, [this._interceptors = const []]) {
     _state = _initialState;
 
     _stateController = StreamController<DState>.broadcast(onListen: () {
@@ -12,7 +12,7 @@ abstract class _BaseDrip<DState> {
   }
 
   final DState _initialState;
-  final List<BaseInterceptor<DState>> _pipettes;
+  final List<BaseInterceptor<DState>> _interceptors;
   late DState _state;
 
   late final StreamController<DState> _stateController;
@@ -46,17 +46,17 @@ abstract class _BaseDrip<DState> {
 
   void _bindStateController() {
     _eventController.stream
-        .asyncExpand((event) => _pipettes
+        .asyncExpand((event) => _interceptors
                 .fold<Next<DState>>(
                   (DripEvent event, DState state) => Stream<DState>.value(state),
-                  (Next<DState> previous, BaseInterceptor<DState> pipette) =>
-                      (DripEvent event, DState state) => ActionExecutor(event, state, previous).call(pipette),
+                  (Next<DState> previous, BaseInterceptor<DState> interceptor) =>
+                      (DripEvent event, DState state) => ActionExecutor(event, state, previous).call(interceptor),
                 )
                 .call(event, _state)
                 .switchMap(
-              (stateAfterPipettes) {
+              (stateAfterInterceptors) {
                 if (event is DripAction<DState>) {
-                  return event.call(stateAfterPipettes).handleError(onError);
+                  return event.call(stateAfterInterceptors).handleError(onError);
                 } else {
                   return mutableStateOf(event).handleError(onError);
                 }

@@ -4,7 +4,7 @@ import 'package:drip/drip.dart';
 
 class DripCounter extends Drip<DripCounterState> {
   DripCounter()
-      : super(DripCounterState(), pipettes: [
+      : super(DripCounterState(), interceptors: [
           MemoryInterceptor<DripCounterState>(historySize: 5),
           Logging(),
           DoubleCountMiddleware(),

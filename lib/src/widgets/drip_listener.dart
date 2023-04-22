@@ -24,14 +24,14 @@ class DripListener<D extends Drip<DState>, DState> extends StatefulWidget {
 
 class _DripListenerState<D extends Drip<DState>, DState> extends State<DripListener<D, DState>> {
   late StreamSubscription<DState> _subscription;
-  late DState _previousState;
+  DState? _previousState;
   late D _drip;
 
   @override
   void initState() {
     super.initState();
     _drip = widget.drip ?? DripProvider.of<D>(context);
-    _previousState = _drip.initialState;
+    // _previousState = _drip.initialState;
     _subscribe();
   }
 
@@ -45,7 +45,7 @@ class _DripListenerState<D extends Drip<DState>, DState> extends State<DripListe
     super.didUpdateWidget(oldWidget);
     if (oldWidget.drip != widget.drip) {
       _drip = widget.drip ?? DripProvider.of<D>(context);
-      _previousState = _drip.initialState;
+      // _previousState = _drip.initialState;
 
       _unsubscribe();
       _subscribe();

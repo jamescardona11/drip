@@ -66,13 +66,11 @@ class DripProvider<D extends Drip> extends StatefulWidget {
 
 class _DripProviderState<D extends Drip> extends State<DripProvider<D>> {
   late D drip;
-  late dynamic lastState;
 
   @override
   void initState() {
     super.initState();
     drip = widget.create(context);
-    lastState = drip.initialState;
   }
 
   @override

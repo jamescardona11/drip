@@ -46,34 +46,12 @@ abstract class _BaseDrip<DState> {
   }
 
   void _bindStateController() {
-    // _eventController.stream.asyncExpand((event) {
-    //   NextMiddleware<DState> next = (event, state) => Stream<DState>.empty();
-    //   for (var pipette in _pipettes.reversed) {
-    //     final NextMiddleware<DState> previousNext = next;
-    //     next = (event, state) => pipette(event, state, previousNext);
-    //   }
-
-    //   return next(event, state).switchMap((valueAfterInterceptors) {
-    //     if (event is DripAction<DState>) {
-    //       return event.call(valueAfterInterceptors).handleError(onError);
-    //     } else if (event is SpecialPipetteEvent) {
-    //       return Stream.value(valueAfterInterceptors);
-    //     } else {
-    //       return mutableStateOf(event).handleError(onError);
-    //     }
-    //   });
-    // }).forEach((DState nextState) {
-    //   if (_stateController.isClosed) return;
-    //   _setState(nextState);
-    //   _stateController.add(nextState);
-    // });
-
     _eventController.stream
-        .asyncExpand((event) => _pipettes.reversed
+        .asyncExpand((event) => _pipettes
                 .fold<NextMiddleware<DState>>(
-                  (DripEvent event, DState state) => Stream<DState>.empty(),
+                  (DripEvent event, DState state) => Stream<DState>.value(state),
                   (NextMiddleware<DState> previous, BaseMiddleware<DState> pipette) =>
-                      (DripEvent event, DState state) => pipette(event, state, previous),
+                      (DripEvent event, DState state) => ActionExecutor(event, state, previous).call(pipette),
                 )
                 .call(event, _state)
                 .switchMap(

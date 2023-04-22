@@ -11,7 +11,6 @@ abstract class BaseMiddleware<DState> {
   Stream<DState> call(
     DripEvent event,
     DState state,
-    NextMiddleware<DState> next,
   );
 
   Stream<DState> actionExecutor(
@@ -35,9 +34,9 @@ class ActionExecutor<DState> {
   Stream<DState> call(
     BaseMiddleware<DState> middleware,
   ) async* {
-    yield* middleware.call(event, state, previousNext);
-    // await for (final state in previousNext(event, state)) {
-    // }
+    await for (final state in previousNext(event, state)) {
+      yield* middleware.call(event, state);
+    }
   }
 }
 
@@ -58,13 +57,12 @@ class Memento<DState> extends BaseMiddleware<DState> {
   late final _FixedLengthList<DState> _history;
 
   @override
-  Stream<DState> call(DripEvent event, DState state, NextMiddleware<DState> next) {
-    print('Memento $event -- $state');
+  Stream<DState> call(DripEvent event, DState state) async* {
     if (event is Undo && _history.isNotEmpty) {
-      return actionExecutor(event, _history.removeLast(), next);
+      yield _history.removeLast();
     } else {
       _history.add(state);
-      return actionExecutor(event, state, next);
+      yield state;
     }
   }
 }
@@ -96,7 +94,6 @@ class Logging<DState> extends BaseMiddleware<DState> {
   Stream<DState> call(
     DripEvent event,
     DState state,
-    NextMiddleware<DState> next,
   ) async* {
     debugPrint('[$state] Starting');
     yield state;

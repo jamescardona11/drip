@@ -6,7 +6,10 @@ import 'package:flutter/foundation.dart';
 part 'base_drip.dart';
 
 abstract class Drip<DState> extends _BaseDrip<DState> {
-  Drip(DState initialState) : super(initialState);
+  Drip(
+    DState initialState, {
+    List<BaseMiddleware> pipettes = const [],
+  }) : super(initialState, pipettes);
 
   @override
   Stream<DState> mutableStateOf(DripEvent event) async* {}
@@ -14,7 +17,8 @@ abstract class Drip<DState> extends _BaseDrip<DState> {
   @protected
   @override
   void emit(DState newState) {
-    if (state == newState || _stateController.isClosed) {
+    if (state == newState) return;
+    if (_stateController.isClosed) {
       debugPrint('Drip: emit() called after was closed');
       return;
     }

@@ -3,7 +3,10 @@
 import 'package:drip/drip.dart';
 
 class DripCounter extends Drip<DripCounterState> {
-  DripCounter() : super(DripCounterState());
+  DripCounter()
+      : super(DripCounterState(), pipettes: [
+          Memento<DripCounterState>(historySize: 5),
+        ]) {}
 
   void increment() {
     print('Increment');

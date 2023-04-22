@@ -1,19 +1,19 @@
 part of 'drip.dart';
 
 abstract class _BaseDrip<DState> {
-  _BaseDrip(this._initialState) {
+  _BaseDrip(this._initialState, [this._pipettes = const []]) {
     _state = _initialState;
 
-    _stateController = StreamController<DState>.broadcast();
+    _stateController = StreamController<DState>.broadcast(onListen: () {
+      print('msg');
+      // Add initialState to all new listeners
+      _stateController.add(_initialState);
+    });
     _bindStateController();
-
-    // I have the initialState in the DripBuilder
-    // Add initialState in controller
-    _stateController.add(_initialState);
-    // print('initialState: ');
   }
 
-  late final DState _initialState;
+  final DState _initialState;
+  final List<BaseMiddleware> _pipettes;
   late DState _state;
 
   late final StreamController<DState> _stateController;
@@ -32,8 +32,6 @@ abstract class _BaseDrip<DState> {
 
   DState get state => _state;
 
-  DState get initialState => _initialState;
-
   @mustCallSuper
   void close() {
     for (final subscription in _subscriptions) {
@@ -48,17 +46,29 @@ abstract class _BaseDrip<DState> {
   }
 
   void _bindStateController() {
-    _eventController.stream.asyncExpand((event) {
+    _eventController.stream.asyncExpand((event) async* {
+      await _executePipetteMiddleware(event);
       if (event is DripAction<DState>) {
-        return event.call(state).handleError(onError);
+        yield* event.call(state).handleError(onError);
+      } else if (event is SpecialPipetteEvent) {
+        yield* Stream.value(state);
       } else {
-        return mutableStateOf(event).handleError(onError);
+        yield* mutableStateOf(event).handleError(onError);
       }
     }).forEach((DState nextState) {
       if (_stateController.isClosed) return;
       _setState(nextState);
       _stateController.add(nextState);
     });
+  }
+
+  Future<void> _executePipetteMiddleware(DripEvent event) async {
+    DState tState = state;
+    for (var pipette in _pipettes) {
+      tState = await pipette.call(event, tState);
+    }
+
+    _setState(tState);
   }
 
   void safeSubscription(StreamSubscription subscription) {

@@ -1,6 +1,3 @@
-// logger
-// transformer
-
 import 'package:flutter/foundation.dart';
 
 import '../drip_core/drip_core.dart';

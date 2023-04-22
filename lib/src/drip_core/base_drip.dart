@@ -5,7 +5,6 @@ abstract class _BaseDrip<DState> {
     _state = _initialState;
 
     _stateController = StreamController<DState>.broadcast(onListen: () {
-      print('msg');
       // Add initialState to all new listeners
       _stateController.add(_initialState);
     });

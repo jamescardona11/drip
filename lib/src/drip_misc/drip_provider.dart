@@ -47,14 +47,6 @@ class DripProvider<D extends Drip> extends StatefulWidget {
     return of<D>(context).dispatch(event);
   }
 
-  // Stream<DState> listen<DState>(
-  //     BuildContext context, DState Function(D drip) selector) {
-  //   return DripProvider.of<D>(context)
-  //       .stateStream
-  //       .map((state) => selector(state))
-  //       .distinct();
-  // }
-
   DripProvider<D> copyWith(Widget child) {
     return DripProvider<D>(
       key: key,
@@ -92,7 +84,7 @@ class _DripProviderIW<D extends Drip> extends InheritedWidget {
   final D drip;
 
   @override
-  bool updateShouldNotify(covariant _DripProviderIW<D> oldWidget) => false;
+  bool updateShouldNotify(covariant _DripProviderIW<D> oldWidget) => drip != oldWidget.drip;
 }
 
 class ProviderError extends Error {

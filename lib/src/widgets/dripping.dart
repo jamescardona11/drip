@@ -2,15 +2,12 @@ import 'package:flutter/widgets.dart';
 
 import '../drip_core/drip_core.dart';
 import '../drip_misc/drip_misc.dart';
+import '../widgets/drip_listener.dart';
 import '../widgets/widgets.dart';
 
-//consider usign RX for sent last state subscription
-// test JUANQ solution
-// see what happens if use change notifier in one side and stream in other
-
-class DripConsumer<D extends Drip<DState>, DState> extends StatefulWidget {
+class Dripping<D extends Drip<DState>, DState> extends StatefulWidget {
   /// default constructor
-  const DripConsumer({
+  const Dripping({
     super.key,
     required this.builder,
     required this.listener,
@@ -22,10 +19,10 @@ class DripConsumer<D extends Drip<DState>, DState> extends StatefulWidget {
   final bool streamListener;
 
   @override
-  State<DripConsumer<D, DState>> createState() => _DripConsumerState<D, DState>();
+  State<Dripping<D, DState>> createState() => _DrippingState<D, DState>();
 }
 
-class _DripConsumerState<D extends Drip<DState>, DState> extends State<DripConsumer<D, DState>> {
+class _DrippingState<D extends Drip<DState>, DState> extends State<Dripping<D, DState>> {
   late D _drip;
 
   @override
@@ -39,7 +36,7 @@ class _DripConsumerState<D extends Drip<DState>, DState> extends State<DripConsu
     return DripListener<D, DState>(
       drip: _drip,
       listener: widget.listener,
-      child: DripBuilder<D, DState>(
+      child: Dripper<D, DState>(
         drip: _drip,
         builder: widget.builder,
       ),

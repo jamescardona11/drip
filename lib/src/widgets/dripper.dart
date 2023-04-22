@@ -3,24 +3,22 @@ import 'package:flutter/widgets.dart';
 import '../drip_core/drip_core.dart';
 import '../drip_misc/drip_misc.dart';
 
-class DripBuilder<D extends Drip<DState>, DState> extends StatefulWidget {
+class Dripper<D extends Drip<DState>, DState> extends StatefulWidget {
   /// default constructor
-  const DripBuilder({
+  const Dripper({
     super.key,
-    this.streamListener = true,
     required this.builder,
     this.drip,
   });
 
-  final bool streamListener;
   final DBuilder<DState> builder;
   final D? drip;
 
   @override
-  State<DripBuilder<D, DState>> createState() => _DripBuilderState<D, DState>();
+  State<Dripper<D, DState>> createState() => _DripperState<D, DState>();
 }
 
-class _DripBuilderState<D extends Drip<DState>, DState> extends State<DripBuilder<D, DState>> {
+class _DripperState<D extends Drip<DState>, DState> extends State<Dripper<D, DState>> {
   late D _drip;
 
   @override
@@ -31,7 +29,7 @@ class _DripBuilderState<D extends Drip<DState>, DState> extends State<DripBuilde
   }
 
   @override
-  void didUpdateWidget(DripBuilder<D, DState> oldWidget) {
+  void didUpdateWidget(Dripper<D, DState> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.drip != widget.drip) {
       _drip = widget.drip ?? DripProvider.of<D>(context);

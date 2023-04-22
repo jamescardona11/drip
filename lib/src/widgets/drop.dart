@@ -2,11 +2,11 @@ import 'package:flutter/widgets.dart';
 
 import '../drip_core/drip_core.dart';
 import '../drip_misc/drip_misc.dart';
-import '../widgets/widgets.dart';
+import '../widgets/drip_listener.dart';
 
-class DripSelect<D extends Drip<DState>, DState, SelectedState> extends StatefulWidget {
+class DropWidget<D extends Drip<DState>, DState, SelectedState> extends StatefulWidget {
   /// default constructor
-  const DripSelect({
+  const DropWidget({
     super.key,
     required this.builder,
     required this.selector,
@@ -16,10 +16,10 @@ class DripSelect<D extends Drip<DState>, DState, SelectedState> extends Stateful
   final Selector<DState, SelectedState> selector;
 
   @override
-  State<DripSelect<D, DState, SelectedState>> createState() => _DripSelectState<D, DState, SelectedState>();
+  State<DropWidget<D, DState, SelectedState>> createState() => _DropWidgetState<D, DState, SelectedState>();
 }
 
-class _DripSelectState<D extends Drip<DState>, DState, SelectedState> extends State<DripSelect<D, DState, SelectedState>> {
+class _DropWidgetState<D extends Drip<DState>, DState, SelectedState> extends State<DropWidget<D, DState, SelectedState>> {
   late D _drip;
   late SelectedState _state;
 

@@ -29,20 +29,15 @@ class DripCounterPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            DripBuilder<DripCounter, DripCounterState>(
-              streamListener: true,
+            Dripper<DripCounter, DripCounterState>(
               builder: (context, state) => Text('Counter: ${state.count}'),
             ),
-            DripListener<DripCounter, DripCounterState>(
-              listener: (context, state) {},
-              child: Text('Listener'),
-            ),
-            DripConsumer<DripCounter, DripCounterState>(
+            Dripping<DripCounter, DripCounterState>(
               listener: (context, state) {},
               builder: (context, state) => Text('Counter: ${state.count}'),
             ),
             SizedBox(height: 20),
-            DripSelect<DripCounter, DripCounterState, String>(
+            DropWidget<DripCounter, DripCounterState, String>(
               builder: (context, state) {
                 return Text('Freeze $state');
               },

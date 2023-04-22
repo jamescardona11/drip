@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:drip/drip.dart';
 import 'package:flutter/foundation.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'base_drip.dart';
 
 abstract class Drip<DState> extends _BaseDrip<DState> {
   Drip(
     DState initialState, {
-    List<BaseMiddleware> pipettes = const [],
+    List<BaseMiddleware<DState>> pipettes = const [],
   }) : super(initialState, pipettes);
 
   @override

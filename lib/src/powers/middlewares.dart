@@ -1,17 +1,47 @@
 // logger
 // transformer
 
+import 'package:flutter/foundation.dart';
+
 import '../drip_core/drip_core.dart';
 
 abstract class BaseMiddleware<DState> {
   const BaseMiddleware();
 
-  Future<DState> call(DripEvent event, DState state);
+  Stream<DState> call(
+    DripEvent event,
+    DState state,
+    NextMiddleware<DState> next,
+  );
 
-  bool canExecute(DState state) => defaultCanExecute(state);
-
-  static bool defaultCanExecute<TState>(TState state) => true;
+  Stream<DState> actionExecutor(
+    DripEvent event,
+    DState state,
+    NextMiddleware<DState> next,
+  ) async* {
+    await for (final state in next(event, state)) {
+      yield state;
+    }
+  }
 }
+
+class ActionExecutor<DState> {
+  const ActionExecutor(this.event, this.state, this.previousNext);
+
+  final DripEvent event;
+  final DState state;
+  final NextMiddleware<DState> previousNext;
+
+  Stream<DState> call(
+    BaseMiddleware<DState> middleware,
+  ) async* {
+    yield* middleware.call(event, state, previousNext);
+    // await for (final state in previousNext(event, state)) {
+    // }
+  }
+}
+
+typedef NextMiddleware<DState> = Stream<DState> Function(DripEvent event, DState state);
 
 class SpecialPipetteEvent extends DripEvent {}
 
@@ -21,22 +51,20 @@ class Memento<DState> extends BaseMiddleware<DState> {
   Memento({
     this.historySize = 50,
   }) {
-    history = _FixedLengthList(historySize);
+    _history = _FixedLengthList(historySize);
   }
 
   final int historySize;
-
-  late _FixedLengthList<DState> history;
+  late final _FixedLengthList<DState> _history;
 
   @override
-  Future<DState> call(DripEvent event, DState state) async {
+  Stream<DState> call(DripEvent event, DState state, NextMiddleware<DState> next) {
     print('Memento $event -- $state');
-    if (event is Undo && history.isNotEmpty) {
-      return history.removeLast();
-      // return history.last;
+    if (event is Undo && _history.isNotEmpty) {
+      return actionExecutor(event, _history.removeLast(), next);
     } else {
-      history.add(state);
-      return state;
+      _history.add(state);
+      return actionExecutor(event, state, next);
     }
   }
 }
@@ -59,4 +87,19 @@ class _FixedLengthList<T> {
   bool get isNotEmpty => _list.isNotEmpty;
 
   List<T> get list => _list;
+}
+
+class Logging<DState> extends BaseMiddleware<DState> {
+  const Logging();
+
+  @override
+  Stream<DState> call(
+    DripEvent event,
+    DState state,
+    NextMiddleware<DState> next,
+  ) async* {
+    debugPrint('[$state] Starting');
+    yield state;
+    debugPrint('[$event] Finished after');
+  }
 }

@@ -6,6 +6,8 @@ class DripCounter extends Drip<DripCounterState> {
   DripCounter()
       : super(DripCounterState(), pipettes: [
           Memento<DripCounterState>(historySize: 5),
+          Logging(),
+          // DoubleCountMiddleware(),
         ]) {}
 
   void increment() {
@@ -24,6 +26,18 @@ class DripCounter extends Drip<DripCounterState> {
       print('Clear');
       // emit(state.copyWith(count: 0));
       yield state.copyWith(count: 0);
+    }
+  }
+}
+
+class DoubleCountMiddleware extends BaseMiddleware<DripCounterState> {
+  @override
+  Stream<DripCounterState> call(DripEvent event, DripCounterState state, NextMiddleware<DripCounterState> next) async* {
+    await for (final state in next(event, state)) {
+      if (state.count % 2 == 0) {
+        yield state.copyWith(count: state.count + 1);
+      }
+      yield state;
     }
   }
 }

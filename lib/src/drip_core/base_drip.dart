@@ -29,6 +29,8 @@ abstract class _BaseDrip<DState> {
 
   void onEvent(DripEvent event);
 
+  void onState(DState state);
+
   DState get state => _state;
 
   @mustCallSuper
@@ -41,6 +43,7 @@ abstract class _BaseDrip<DState> {
   void _setState(DState state) {
     if (_state != state) {
       _state = state;
+      onState(state);
     }
   }
 

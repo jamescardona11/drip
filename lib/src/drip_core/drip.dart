@@ -53,5 +53,8 @@ abstract class Drip<DState> extends _BaseDrip<DState> {
   @override
   void onEvent(DripEvent event) {}
 
+  @override
+  void onState(DState state) {}
+
   Stream<DState> get stateStream => _stateController.stream;
 }

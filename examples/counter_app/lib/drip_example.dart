@@ -2,11 +2,10 @@
 
 import 'package:drip/drip.dart';
 
-class DripCounter extends Drip<DripCounterState> {
+class DripCounter extends Drip<DripCounterState> with DefaultLogger<DripCounterState> {
   DripCounter()
       : super(DripCounterState(), interceptors: [
           MemoryInterceptor<DripCounterState>(historySize: 5),
-          Logging(),
           DoubleCountMiddleware(),
         ]) {}
 

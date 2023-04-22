@@ -5,7 +5,7 @@ import 'package:drip/drip.dart';
 class DripCounter extends Drip<DripCounterState> {
   DripCounter()
       : super(DripCounterState(), pipettes: [
-          Memento<DripCounterState>(historySize: 5),
+          MemoryInterceptor<DripCounterState>(historySize: 5),
           Logging(),
           DoubleCountMiddleware(),
         ]) {}
@@ -30,7 +30,7 @@ class DripCounter extends Drip<DripCounterState> {
   }
 }
 
-class DoubleCountMiddleware extends BaseMiddleware<DripCounterState> {
+class DoubleCountMiddleware extends BaseInterceptor<DripCounterState> {
   @override
   Stream<DripCounterState> call(DripEvent event, DripCounterState state) async* {
     if (state.count % 2 == 0) {

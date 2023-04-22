@@ -12,7 +12,7 @@ abstract class _BaseDrip<DState> {
   }
 
   final DState _initialState;
-  final List<BaseMiddleware<DState>> _pipettes;
+  final List<BaseInterceptor<DState>> _pipettes;
   late DState _state;
 
   late final StreamController<DState> _stateController;
@@ -47,9 +47,9 @@ abstract class _BaseDrip<DState> {
   void _bindStateController() {
     _eventController.stream
         .asyncExpand((event) => _pipettes
-                .fold<NextMiddleware<DState>>(
+                .fold<Next<DState>>(
                   (DripEvent event, DState state) => Stream<DState>.value(state),
-                  (NextMiddleware<DState> previous, BaseMiddleware<DState> pipette) =>
+                  (Next<DState> previous, BaseInterceptor<DState> pipette) =>
                       (DripEvent event, DState state) => ActionExecutor(event, state, previous).call(pipette),
                 )
                 .call(event, _state)
@@ -57,8 +57,6 @@ abstract class _BaseDrip<DState> {
               (stateAfterPipettes) {
                 if (event is DripAction<DState>) {
                   return event.call(stateAfterPipettes).handleError(onError);
-                } else if (event is SpecialPipetteEvent) {
-                  return Stream.value(stateAfterPipettes);
                 } else {
                   return mutableStateOf(event).handleError(onError);
                 }

@@ -4,12 +4,14 @@ import 'package:drip/drip.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../interceptors/action_executor.dart';
+
 part 'base_drip.dart';
 
 abstract class Drip<DState> extends _BaseDrip<DState> {
   Drip(
     DState initialState, {
-    List<BaseMiddleware<DState>> pipettes = const [],
+    List<BaseInterceptor<DState>> pipettes = const [],
   }) : super(initialState, pipettes);
 
   @override

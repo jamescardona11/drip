@@ -1,5 +1,6 @@
 library drip;
 
+export 'src/drip_core/drip_core.dart';
 export 'src/drip_misc/drip_extension.dart';
 export 'src/drip_misc/drip_provider.dart';
 export 'src/drip_misc/generic_state_change_action.dart';

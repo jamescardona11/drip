@@ -83,14 +83,14 @@ class _DripProviderState<D extends Drip> extends State<DripProvider<D>> {
   }
 }
 
-class _DripProviderIW<D extends Drip> extends InheritedNotifier {
+class _DripProviderIW<D extends Drip> extends InheritedWidget {
   const _DripProviderIW({
     super.key,
     required super.child,
-    required D drip,
-  }) : super(notifier: drip);
+    required this.drip,
+  }) : super();
 
-  D get drip => notifier as D;
+  final D drip;
 
   @override
   bool updateShouldNotify(covariant _DripProviderIW<D> oldWidget) => false;

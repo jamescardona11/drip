@@ -40,17 +40,12 @@ class _DripBuilderState<D extends Drip<DState>, DState> extends State<DripBuilde
 
   @override
   Widget build(BuildContext context) {
-    return widget.streamListener
-        ? StreamBuilder<DState>(
-            initialData: _drip.state,
-            stream: _drip.stateStream,
-            builder: (_, snapshot) {
-              return widget.builder(context, snapshot.requireData);
-            },
-          )
-        : AnimatedBuilder(
-            animation: _drip,
-            builder: (_, __) => widget.builder(context, _drip.state),
-          );
+    return StreamBuilder<DState>(
+      initialData: _drip.state,
+      stream: _drip.stateStream,
+      builder: (_, snapshot) {
+        return widget.builder(context, snapshot.requireData);
+      },
+    );
   }
 }

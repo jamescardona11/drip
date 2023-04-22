@@ -46,6 +46,8 @@ class SpecialPipetteEvent extends DripEvent {}
 
 class Undo extends SpecialPipetteEvent {}
 
+class Drain extends SpecialPipetteEvent {}
+
 class Memento<DState> extends BaseMiddleware<DState> {
   Memento({
     this.historySize = 50,
@@ -60,9 +62,19 @@ class Memento<DState> extends BaseMiddleware<DState> {
   Stream<DState> call(DripEvent event, DState state) async* {
     if (event is Undo && _history.isNotEmpty) {
       yield _history.removeLast();
+    } else if (event is Drain) {
+      _history.clean();
+      yield state;
     } else {
       _history.add(state);
       yield state;
+    }
+  }
+
+  void print() {
+    debugPrint('History:');
+    for (final state in _history.list) {
+      debugPrint('$state');
     }
   }
 }
@@ -81,6 +93,8 @@ class _FixedLengthList<T> {
   }
 
   T removeLast() => _list.removeLast();
+
+  void clean() => _list.clear();
 
   bool get isNotEmpty => _list.isNotEmpty;
 

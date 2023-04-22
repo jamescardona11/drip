@@ -1,6 +1,7 @@
-import 'package:drip/src/drip_core/drip_core.dart';
-import 'package:drip/src/drip_misc/typedef.dart';
 import 'package:flutter/widgets.dart';
+
+import '../drip_core/drip_core.dart';
+import '../drip_misc/typedef.dart';
 
 class DripProvider<D extends Drip> extends StatefulWidget {
   const DripProvider({

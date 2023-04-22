@@ -1,7 +1,8 @@
-import 'package:drip/src/drip_core/drip_core.dart';
-import 'package:drip/src/drip_misc/drip_misc.dart';
-import 'package:drip/src/widgets/widgets.dart';
 import 'package:flutter/widgets.dart';
+
+import '../drip_core/drip_core.dart';
+import '../drip_misc/drip_misc.dart';
+import '../widgets/widgets.dart';
 
 class DripSelect<D extends Drip<DState>, DState, SelectedState> extends StatefulWidget {
   /// default constructor

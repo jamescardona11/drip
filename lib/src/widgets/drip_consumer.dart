@@ -1,7 +1,8 @@
-import 'package:drip/src/drip_core/drip_core.dart';
-import 'package:drip/src/drip_misc/drip_misc.dart';
-import 'package:drip/src/widgets/widgets.dart';
 import 'package:flutter/widgets.dart';
+
+import '../drip_core/drip_core.dart';
+import '../drip_misc/drip_misc.dart';
+import '../widgets/widgets.dart';
 
 //consider usign RX for sent last state subscription
 // test JUANQ solution

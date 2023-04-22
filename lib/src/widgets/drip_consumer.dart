@@ -1,9 +1,7 @@
-import 'package:drip/src/drip/base_drip.dart';
-import 'package:drip/src/drip/drip_provider.dart';
-import 'package:drip/src/drip/typedef.dart';
-import 'package:drip/src/widgets/drip_builder.dart';
-import 'package:drip/src/widgets/drip_listener.dart';
-import 'package:flutter/material.dart';
+import 'package:drip/src/drip_core/drip_core.dart';
+import 'package:drip/src/drip_misc/drip_misc.dart';
+import 'package:drip/src/widgets/widgets.dart';
+import 'package:flutter/widgets.dart';
 
 //consider usign RX for sent last state subscription
 // test JUANQ solution
@@ -23,12 +21,10 @@ class DripConsumer<D extends Drip<DState>, DState> extends StatefulWidget {
   final bool streamListener;
 
   @override
-  State<DripConsumer<D, DState>> createState() =>
-      _DripConsumerState<D, DState>();
+  State<DripConsumer<D, DState>> createState() => _DripConsumerState<D, DState>();
 }
 
-class _DripConsumerState<D extends Drip<DState>, DState>
-    extends State<DripConsumer<D, DState>> {
+class _DripConsumerState<D extends Drip<DState>, DState> extends State<DripConsumer<D, DState>> {
   late D _drip;
 
   @override

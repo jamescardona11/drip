@@ -1,6 +1,5 @@
-import 'package:drip/src/drip/base_drip.dart';
-import 'package:drip/src/drip/drip_events.dart';
-import 'package:drip/src/drip/typedef.dart';
+import 'package:drip/src/drip_core/drip_core.dart';
+import 'package:drip/src/drip_misc/typedef.dart';
 import 'package:flutter/widgets.dart';
 
 class DripProvider<D extends Drip> extends StatefulWidget {
@@ -23,9 +22,7 @@ class DripProvider<D extends Drip> extends StatefulWidget {
 
     final provider = listen
         ? context.dependOnInheritedWidgetOfExactType<_DripProviderIW<D>>()
-        : (context
-            .getElementForInheritedWidgetOfExactType<_DripProviderIW<D>>()
-            ?.widget as _DripProviderIW<D>?);
+        : (context.getElementForInheritedWidgetOfExactType<_DripProviderIW<D>>()?.widget as _DripProviderIW<D>?);
 
     if (provider == null) {
       throw ProviderError(D);

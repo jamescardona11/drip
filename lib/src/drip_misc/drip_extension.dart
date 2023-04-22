@@ -1,9 +1,8 @@
 // ignore_for_file: unused_element
 
+import 'package:drip/src/drip_core/drip_core.dart';
 import 'package:flutter/material.dart';
 
-import 'base_drip.dart';
-import 'drip_events.dart';
 import 'drip_provider.dart';
 
 extension DripProviderX on BuildContext {

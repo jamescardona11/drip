@@ -1,11 +1,9 @@
-import 'package:drip/src/drip/base_drip.dart';
-import 'package:drip/src/drip/drip_provider.dart';
-import 'package:drip/src/drip/typedef.dart';
-import 'package:drip/src/widgets/drip_listener.dart';
-import 'package:flutter/material.dart';
+import 'package:drip/src/drip_core/drip_core.dart';
+import 'package:drip/src/drip_misc/drip_misc.dart';
+import 'package:drip/src/widgets/widgets.dart';
+import 'package:flutter/widgets.dart';
 
-class DripSelect<D extends Drip<DState>, DState, SelectedState>
-    extends StatefulWidget {
+class DripSelect<D extends Drip<DState>, DState, SelectedState> extends StatefulWidget {
   /// default constructor
   const DripSelect({
     super.key,
@@ -17,12 +15,10 @@ class DripSelect<D extends Drip<DState>, DState, SelectedState>
   final Selector<DState, SelectedState> selector;
 
   @override
-  State<DripSelect<D, DState, SelectedState>> createState() =>
-      _DripSelectState<D, DState, SelectedState>();
+  State<DripSelect<D, DState, SelectedState>> createState() => _DripSelectState<D, DState, SelectedState>();
 }
 
-class _DripSelectState<D extends Drip<DState>, DState, SelectedState>
-    extends State<DripSelect<D, DState, SelectedState>> {
+class _DripSelectState<D extends Drip<DState>, DState, SelectedState> extends State<DripSelect<D, DState, SelectedState>> {
   late D _drip;
   late SelectedState _state;
 

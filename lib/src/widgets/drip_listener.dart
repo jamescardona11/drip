@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:drip/src/drip/base_drip.dart';
-import 'package:drip/src/drip/drip_provider.dart';
-import 'package:drip/src/drip/typedef.dart';
-import 'package:flutter/material.dart';
+import 'package:drip/src/drip_core/drip_core.dart';
+import 'package:drip/src/drip_misc/drip_misc.dart';
+import 'package:flutter/widgets.dart';
 
 class DripListener<D extends Drip<DState>, DState> extends StatefulWidget {
   /// default constructor
@@ -19,12 +18,10 @@ class DripListener<D extends Drip<DState>, DState> extends StatefulWidget {
   final D? drip;
 
   @override
-  State<DripListener<D, DState>> createState() =>
-      _DripListenerState<D, DState>();
+  State<DripListener<D, DState>> createState() => _DripListenerState<D, DState>();
 }
 
-class _DripListenerState<D extends Drip<DState>, DState>
-    extends State<DripListener<D, DState>> {
+class _DripListenerState<D extends Drip<DState>, DState> extends State<DripListener<D, DState>> {
   late StreamSubscription<DState> _subscription;
   late DState _previousState;
   late D _drip;

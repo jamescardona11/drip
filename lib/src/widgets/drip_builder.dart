@@ -1,7 +1,6 @@
-import 'package:drip/src/drip/base_drip.dart';
-import 'package:drip/src/drip/drip_provider.dart';
-import 'package:drip/src/drip/typedef.dart';
-import 'package:flutter/material.dart';
+import 'package:drip/src/drip_core/drip_core.dart';
+import 'package:drip/src/drip_misc/drip_misc.dart';
+import 'package:flutter/widgets.dart';
 
 class DripBuilder<D extends Drip<DState>, DState> extends StatefulWidget {
   /// default constructor
@@ -20,8 +19,7 @@ class DripBuilder<D extends Drip<DState>, DState> extends StatefulWidget {
   State<DripBuilder<D, DState>> createState() => _DripBuilderState<D, DState>();
 }
 
-class _DripBuilderState<D extends Drip<DState>, DState>
-    extends State<DripBuilder<D, DState>> {
+class _DripBuilderState<D extends Drip<DState>, DState> extends State<DripBuilder<D, DState>> {
   late D _drip;
 
   @override

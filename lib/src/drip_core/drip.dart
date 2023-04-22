@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:flutter/widgets.dart';
+import 'package:drip/drip.dart';
+import 'package:flutter/foundation.dart';
 
-import 'drip_events.dart';
+import 'drip_action.dart';
 
 abstract class Drip<DState> extends Listenable {
-  // =
-
   Drip(this._initialState) {
     _state = _initialState;
 

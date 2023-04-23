@@ -11,12 +11,12 @@ class DripCounter extends Drip<DripCounterState> with DefaultLogger<DripCounterS
 
   void increment() {
     print('Increment');
-    emit(state.copyWith(count: state.count + 1));
+    leak(state.copyWith(count: state.count + 1));
   }
 
   void freeze() {
     print('freeze');
-    emit(state.copyWith(str: '${state.count}'));
+    leak(state.copyWith(str: '${state.count}'));
   }
 
   @override

@@ -4,6 +4,15 @@ import '../drip_core/drip_core.dart';
 import '../drip_misc/drip_misc.dart';
 import '../widgets/drip_listener.dart';
 
+/// {@template drop}
+///
+/// A widget that listens to a [Drip] and rebuilds when the [Drip] emits a new state.
+/// That state is then passed to the [builder] function.
+/// To avoid unnecessary rebuilds, the [builder] function is only called when the [selector] function returns a new value.
+/// The [selector] function is called with the current state of the [Drip] and should return a value that is used to determine whether the [builder] function should be called.
+///
+/// {@endtemplate}
+
 class DropWidget<D extends Drip<DState>, DState, SelectedState> extends StatefulWidget {
   /// default constructor
   const DropWidget({

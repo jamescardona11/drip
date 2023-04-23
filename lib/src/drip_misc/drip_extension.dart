@@ -5,6 +5,11 @@ import 'package:flutter/material.dart';
 import '../drip_core/drip_core.dart';
 import 'drip_provider.dart';
 
+/// {@template drip_extension}
+///
+/// DripProvider extension help to access the [Drip] methods using the context
+///
+/// {@endtemplate}
 extension DripProviderX on BuildContext {
   D read<D extends Drip>() {
     return DripProvider.read<D>(this);

@@ -5,18 +5,25 @@ import '../drip_misc/drip_misc.dart';
 import '../widgets/drip_listener.dart';
 import '../widgets/widgets.dart';
 
+/// {@template dripping}
+///
+/// This class provide a builder and listener for a  [Drip]
+/// The class is similar to Consumer in bloc
+/// The builder is called when the drip emits a new state
+/// The listener is called when the drip emits a new state different from the previous one
+///
+/// {@endtemplate}
+
 class Dripping<D extends Drip<DState>, DState> extends StatefulWidget {
   /// default constructor
   const Dripping({
     super.key,
     required this.builder,
     required this.listener,
-    this.streamListener = true,
   });
 
   final DBuilder<DState> builder;
   final DListener<DState> listener;
-  final bool streamListener;
 
   @override
   State<Dripping<D, DState>> createState() => _DrippingState<D, DState>();

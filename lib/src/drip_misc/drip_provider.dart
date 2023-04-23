@@ -3,6 +3,14 @@ import 'package:flutter/widgets.dart';
 import '../drip_core/drip_core.dart';
 import '../drip_misc/typedef.dart';
 
+/// {@template drip_provider}
+///
+/// DripProvider is a [InheritedWidget] that provides the [Drip] to its children
+/// The [Drip] is created using the [create] function
+/// Children can access the [Drip] using the [DripProvider.of] method or using BuildContext extension
+///
+/// {@endtemplate}
+
 class DripProvider<D extends Drip> extends StatefulWidget {
   const DripProvider({
     Key? key,
@@ -32,14 +40,17 @@ class DripProvider<D extends Drip> extends StatefulWidget {
     return provider.drip;
   }
 
+  /// Method to access to the [Drip] using the context
   static D read<D extends Drip>(BuildContext context) {
     return of<D>(context);
   }
 
+  /// Method to watch changes in the [Drip] using the context
   static D watch<D extends Drip>(BuildContext context) {
     return of<D>(context, listen: true);
   }
 
+  /// Method to dispatch an event to the [Drip] using the context
   static void dispatch<D extends Drip>(
     BuildContext context,
     DripEvent event,

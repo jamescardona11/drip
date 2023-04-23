@@ -3,6 +3,14 @@ import 'package:flutter/widgets.dart';
 import '../drip_core/drip_core.dart';
 import '../drip_misc/drip_misc.dart';
 
+/// {@template dripper}
+///
+/// Dripper is a widget that rebuilds when the [Drip] state changes.
+/// It is similar to BlocBuilder in bloc
+/// The builder is called when the drip emits a new state
+/// The new state can be the same as the previous one
+///
+/// {@endtemplate}
 class Dripper<D extends Drip<DState>, DState> extends StatefulWidget {
   /// default constructor
   const Dripper({
@@ -25,7 +33,6 @@ class _DripperState<D extends Drip<DState>, DState> extends State<Dripper<D, DSt
   void initState() {
     super.initState();
     _drip = widget.drip ?? DripProvider.of<D>(context);
-    // _previousState = _drip.initialState;
   }
 
   @override

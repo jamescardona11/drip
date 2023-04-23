@@ -31,7 +31,6 @@ class _DripListenerState<D extends Drip<DState>, DState> extends State<DripListe
   void initState() {
     super.initState();
     _drip = widget.drip ?? DripProvider.of<D>(context);
-    // _previousState = _drip.initialState;
     _subscribe();
   }
 

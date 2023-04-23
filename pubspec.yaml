@@ -1,5 +1,5 @@
 name: drip
-description: A new Flutter package project.
+description: Minimalist chunked State Management for Flutter
 version: 0.0.1
 homepage:
 
@@ -8,12 +8,10 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  ansicolor: ^2.0.1
   flutter:
     sdk: flutter
   logger: ^1.3.0
   meta: ^1.8.0
-  rxdart: ^0.27.7
 
 dev_dependencies:
   flutter_test:

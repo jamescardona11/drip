@@ -10,15 +10,15 @@ For general information about developing packages, see the Dart guide for
 and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
+# DRIP
+
+
+<p align="center">
+<img src="https://github.com/jamescardona11/drip/blob/main/base_logo.png?raw=true" height="250" alt="Drip Package" />
+</p>
 
 Drip is a wrapper for InheritedWidget to be able to handle the state management using Streams.
 This is a personal project and is under-construction.
-
-<p align="center">
-<img src="https://github.com/jamescardona11/drip/blob/main/img/logo.png?raw=true" height="250" alt="Drip Package" />
-</p>
-
-
 
 ## Features
 
@@ -86,8 +86,8 @@ class DripCounter extends Drip<int> {
 
 ### Examples
 
-1. [Counter](https://github.com/jamescardona11/argo/tree/main/example/counter_app): Simple example of use the drip
-2. [Todo](https://github.com/jamescardona11/argo/tree/main/example/todo_app): More complex example to use drip
+1. [Counter](https://github.com/jamescardona11/drip/tree/main/examples/counter_app): Simple example of use the drip
+2. [Todo](https://github.com/jamescardona11/drip/tree/main/examples/todo_app): More complex example to use drip
 
 
 

@@ -86,8 +86,8 @@ class DripCounter extends Drip<int> {
 
 ### Examples
 
-1. [Counter](https://github.com/jamescardona11/drip/tree/main/examples/counter_app): Simple example of use the drip
-2. [Todo](https://github.com/jamescardona11/drip/tree/main/examples/todo_app): More complex example to use drip
+1. [Counter](https://github.com/jamescardona11/drip/tree/main/example/counter_app): Simple example of use the drip
+2. [Todo](https://github.com/jamescardona11/drip/tree/main/example/todo_app): More complex example to use drip
 
 
 

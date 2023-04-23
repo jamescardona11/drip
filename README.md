@@ -34,7 +34,7 @@ Import this library into your project:
 drip: ^latest_version
 ```
 
-## Usage
+## Basic Usage
 
 ```dart
 DripProvider<DripCounter>(
@@ -83,6 +83,54 @@ class DripCounter extends Drip<int> {
 
 ```
 
+#### DripActions
+DripActions allow us to execute code in isolation, as if it were an extension of the main Drip.
+
+```dart
+class IncrementCountAction extends DripAction<DripCounterState> {
+  @override
+  Stream<DripCounterState> call(DripCounterState state) async* {
+    yield state.copyWith(count: state.count + 1);
+  }
+}
+```
+
+
+#### Interceptors
+
+Interceptors allow us to change or modify state before it is processed as an Action or Event.
+
+```dart
+class MemoryInterceptor<DState> extends BaseInterceptor<DState> {
+  MemoryInterceptor({
+    this.historySize = 50,
+  });
+
+  /// The size of the history
+  final int historySize;
+
+  /// The history list of the Drip
+  final List<DState> _history = [];
+
+  @override
+  Stream<DState> call(DripEvent event, DState state) async* {
+    if (event is UndoMemory<DState> && _history.isNotEmpty) {
+      yield _history.removeLast();
+    } else if (event is DrainMemory<DState>) {
+      _history.clear();
+      yield state;
+    } else {
+      if (_history.length >= historySize) {
+        _history.removeAt(0);
+      }
+      _history.add(state);
+      yield state;
+    }
+  }
+}
+
+```
+
 
 ### Examples
 
@@ -97,6 +145,8 @@ Flutter is a game-changing technology that will revolutionize not just developme
   <img alt="Flutter"
        src="https://github.com/jamescardona11/argo/blob/main/img/flutter_logo.png?raw=true" />
 </a>
+
+
 
 
 ## Maintainers

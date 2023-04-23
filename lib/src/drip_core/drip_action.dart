@@ -4,7 +4,7 @@
 ///  The Events are used to change the state of the [Drip]
 ///
 /// {@endtemplate}
-abstract class DripEvent {
+abstract class DripEvent<DState> {
   const DripEvent();
 
   @override
@@ -19,7 +19,7 @@ abstract class DripEvent {
 ///
 /// {@endtemplate}
 
-abstract class DripAction<DState> extends DripEvent {
+abstract class DripAction<DState> extends DripEvent<DState> {
   const DripAction();
 
   Stream<DState> call(DState state);

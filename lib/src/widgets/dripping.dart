@@ -22,7 +22,7 @@ class Dripping<D extends Drip<DState>, DState> extends StatefulWidget {
     required this.listener,
   });
 
-  final DBuilder<DState> builder;
+  final DBuilder<D, DState> builder;
   final DListener<DState> listener;
 
   @override

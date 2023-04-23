@@ -74,14 +74,14 @@ class DripCounterPage extends StatelessWidget {
             SizedBox(width: 10),
             ElevatedButton(
               onPressed: () {
-                DripProvider.of<DripCounter>(context).dispatch(Drain());
+                DripProvider.of<DripCounter>(context).dispatch(DrainMemory());
               },
               child: Icon(Icons.clear_all),
             ),
             SizedBox(width: 10),
             ElevatedButton(
               onPressed: () {
-                DripProvider.of<DripCounter>(context).dispatch(Undo());
+                DripProvider.of<DripCounter>(context).dispatch(UndoMemory());
               },
               child: Icon(Icons.undo),
             ),

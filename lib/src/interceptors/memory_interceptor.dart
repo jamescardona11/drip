@@ -8,9 +8,9 @@ import 'base_interceptors.dart';
 /// This class is used to undo the last state of the Drip
 ///
 /// {endtemplate}
-class Undo extends DripAction {
+class UndoMemory<DState> extends DripAction<DState> {
   @override
-  Stream call(state) {
+  Stream<DState> call(state) {
     return Stream.value(state);
   }
 }
@@ -20,9 +20,9 @@ class Undo extends DripAction {
 /// This class is used to clean the history of the Drip
 ///
 /// {endtemplate}
-class Drain extends DripAction {
+class DrainMemory<DState> extends DripAction<DState> {
   @override
-  Stream call(state) {
+  Stream<DState> call(state) {
     return Stream.value(state);
   }
 }
@@ -36,24 +36,25 @@ class Drain extends DripAction {
 class MemoryInterceptor<DState> extends BaseInterceptor<DState> {
   MemoryInterceptor({
     this.historySize = 50,
-  }) {
-    _history = _FixedLengthList(historySize);
-  }
+  });
 
   /// The size of the history
   final int historySize;
 
   /// The history list of the Drip
-  late final _FixedLengthList<DState> _history;
+  final List<DState> _history = [];
 
   @override
   Stream<DState> call(DripEvent event, DState state) async* {
-    if (event is Undo && _history.isNotEmpty) {
+    if (event is UndoMemory<DState> && _history.isNotEmpty) {
       yield _history.removeLast();
-    } else if (event is Drain) {
-      _history.clean();
+    } else if (event is DrainMemory<DState>) {
+      _history.clear();
       yield state;
     } else {
+      if (_history.length >= historySize) {
+        _history.removeAt(0);
+      }
       _history.add(state);
       yield state;
     }
@@ -63,34 +64,8 @@ class MemoryInterceptor<DState> extends BaseInterceptor<DState> {
   void print() {
     final logger = Logger();
     logger.d('MemoryInterceptor ** History **:');
-    for (final state in _history.list) {
+    for (final state in _history) {
       logger.d('$state');
     }
   }
-}
-
-/// Fixed length list implementation
-/// This class is used to save the history of the Drip
-/// This class is used inside of the [MemoryInterceptor] class
-
-class _FixedLengthList<T> {
-  _FixedLengthList(this.maxLength);
-
-  final int maxLength;
-  final List<T> _list = <T>[];
-
-  void add(T element) {
-    if (_list.length >= maxLength) {
-      _list.removeAt(0);
-    }
-    _list.add(element);
-  }
-
-  T removeLast() => _list.removeLast();
-
-  void clean() => _list.clear();
-
-  bool get isNotEmpty => _list.isNotEmpty;
-
-  List<T> get list => _list;
 }

@@ -2,7 +2,7 @@
 
 import 'package:drip/drip.dart';
 
-class DripCounter extends Drip<DripCounterState> with DefaultLogger<DripCounterState> {
+class DripCounter extends Drip<DripCounterState> {
   DripCounter()
       : super(DripCounterState(), interceptors: [
           MemoryInterceptor<DripCounterState>(historySize: 5),
@@ -40,7 +40,7 @@ class DoubleCountMiddleware extends BaseInterceptor<DripCounterState> {
   }
 }
 
-class ClearEvent extends DripEvent {}
+class ClearEvent extends DripEvent<DripCounterState> {}
 
 class DripCounterState {
   final int count;

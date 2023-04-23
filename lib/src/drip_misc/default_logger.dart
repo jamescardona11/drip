@@ -7,7 +7,7 @@ import '../drip_core/drip_core.dart';
 /// This mixin is used to log the events and states of the Drip
 ///
 /// {@endtemplate}
-mixin DefaultLogger<DState> {
+mixin DefaultDripLoggerMixin<DState> {
   final _logger = Logger();
   void onError(Object err, StackTrace? stackTrace) {
     _logger.e('=> Error in Drip', err, stackTrace);

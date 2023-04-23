@@ -26,7 +26,7 @@ abstract class _BaseDrip<DState> {
   final StreamController<DripEvent> _eventController = StreamController<DripEvent>();
 
   /// This method is used to transform a new DripEvent in new States
-  Stream<DState> mutableStateOf(DripEvent event);
+  Stream<DState> mutableStateOf(DripEvent event, DState state);
 
   /// This method is to change the current state into a new state
   /// This method start a new `DripAction` called [GenericStateChangeAction]
@@ -35,16 +35,18 @@ abstract class _BaseDrip<DState> {
 
   /// THis method should be called when you want to dispatch a new event
   /// The sate mutation when this method is called is handle for `mutableStateOf`
-  void dispatch(DripEvent event);
+  void dispatch(DripEvent<DState> event);
 
   /// Method is called when an error is thrown
   void onError(Object err, StackTrace? stackTrace);
 
   /// Method is called when a new event is dispatched
-  void onEvent(DripEvent event);
+  void onEvent(DripEvent<DState> event);
 
   /// Method is called when the state is changed
   void onState(DState state);
+
+  bool get isClosed => _stateController.isClosed;
 
   /// Close the _stateController and _eventController
   /// Use this method when you want to close the drip
@@ -58,11 +60,12 @@ abstract class _BaseDrip<DState> {
   DState get state => _state;
 
   /// Add the new state to _setState and _stateController
+  // ?? is necessary avoid set a newState when the newState is the same that the current?
   void _setState(DState state) {
-    if (_state != state) {
-      _state = state;
-      onState(state);
-    }
+    _state = state;
+    onState(state);
+    // if (_state != state) {
+    // }
   }
 
   /// Method that transform the event stream into a state stream using the interceptors and _switcher
@@ -88,7 +91,7 @@ abstract class _BaseDrip<DState> {
         if (event is DripAction) {
           return event.call(stateAfterInterceptors).handleError(onError);
         } else {
-          return mutableStateOf(event).handleError(onError);
+          return mutableStateOf(event, stateAfterInterceptors).handleError(onError);
         }
       });
     }).forEach((nextState) {

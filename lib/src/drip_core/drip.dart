@@ -24,14 +24,14 @@ abstract class Drip<DState> extends _BaseDrip<DState> {
   /// This method is used to change the state of the Drip
   /// This method is called when a new event is dispatched with new [DripEvent]
   @override
-  Stream<DState> mutableStateOf(DripEvent event) async* {}
+  Stream<DState> mutableStateOf(DripEvent event, DState state) async* {}
 
   /// This method is used to change the state of the Drip
   /// Is important to use this method inside of drip and not outside
+  // ?? is necessary avoid leak a newState method when the newState is the same that the current?
   @protected
   @override
   void leak(DState newState) {
-    if (state == newState) return;
     if (_stateController.isClosed) {
       debugPrint('Drip: emit() called after was closed');
       return;
@@ -40,9 +40,9 @@ abstract class Drip<DState> extends _BaseDrip<DState> {
     dispatch(GenericStateChangeAction(newState));
   }
 
-  /// This method is used to change the state of the Drip dispatching a new [DrinEvent]
+  /// This method is used to change the state of the Drip dispatching a new [DripEvent] or [DripAction]
   @override
-  void dispatch(DripEvent event) {
+  void dispatch(DripEvent<DState> event) {
     try {
       onEvent(event);
       _eventController.add(event);
@@ -55,7 +55,7 @@ abstract class Drip<DState> extends _BaseDrip<DState> {
   void onError(Object err, StackTrace? stackTrace) {}
 
   @override
-  void onEvent(DripEvent event) {}
+  void onEvent(DripEvent<DState> event) {}
 
   @override
   void onState(DState state) {}

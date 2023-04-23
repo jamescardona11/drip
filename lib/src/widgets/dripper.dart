@@ -19,7 +19,7 @@ class Dripper<D extends Drip<DState>, DState> extends StatefulWidget {
     this.drip,
   });
 
-  final DBuilder<DState> builder;
+  final DBuilder<D, DState> builder;
   final D? drip;
 
   @override
@@ -50,7 +50,7 @@ class _DripperState<D extends Drip<DState>, DState> extends State<Dripper<D, DSt
       initialData: _drip.state,
       stream: _drip.stateStream,
       builder: (_, snapshot) {
-        return widget.builder(context, snapshot.requireData);
+        return widget.builder(_drip, snapshot.requireData);
       },
     );
   }

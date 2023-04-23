@@ -7,7 +7,7 @@ import 'base_interceptors.dart';
 ///
 /// This class is used to undo the last state of the Drip
 ///
-/// {endtemplate}
+/// {@endtemplate}
 class UndoMemory<DState> extends DripAction<DState> {
   @override
   Stream<DState> call(state) {
@@ -19,7 +19,7 @@ class UndoMemory<DState> extends DripAction<DState> {
 ///
 /// This class is used to clean the history of the Drip
 ///
-/// {endtemplate}
+/// {@endtemplate}
 class DrainMemory<DState> extends DripAction<DState> {
   @override
   Stream<DState> call(state) {
@@ -32,7 +32,8 @@ class DrainMemory<DState> extends DripAction<DState> {
 /// MemoryInterceptor is used to save the history of the Drip
 /// This can be helpful to save the state in debug mode
 ///
-/// {endtemplate}
+///
+/// {@endtemplate}
 class MemoryInterceptor<DState> extends BaseInterceptor<DState> {
   MemoryInterceptor({
     this.historySize = 50,

@@ -56,22 +56,6 @@ class ToDoDeletedEvent extends DripEvent<DripToDoState> {
 
 /// The DripAction is triggered by the Drip.dispatch
 /// Is handle in _eventControllerTransformer in the _BaseDrip
-class DripSearchAction extends DripAction<DripToDoState> {
-  final String searchKey;
-
-  DripSearchAction(this.searchKey);
-
-  @override
-  Stream<DripToDoState> call(DripToDoState state) async* {
-    final results = state.toDos.where((item) => item.todoText.toLowerCase().contains(searchKey.toLowerCase())).toList();
-
-    yield state.copyWith(
-      searchResults: results,
-      searchText: searchKey,
-    );
-  }
-}
-
 class DripAddNewToDo extends DripAction<DripToDoState> {
   final String toDoText;
 

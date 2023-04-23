@@ -1,7 +1,7 @@
 import 'package:drip/drip.dart';
 import 'package:flutter/material.dart';
 
-import 'drip_example.dart';
+import 'drip_counter.dart';
 
 void main() => runApp(MyApp());
 
@@ -22,6 +22,8 @@ class MyApp extends StatelessWidget {
 }
 
 class DripCounterPage extends StatelessWidget {
+  const DripCounterPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,58 +34,42 @@ class DripCounterPage extends StatelessWidget {
             Dripper<DripCounter, DripCounterState>(
               builder: (context, state) => Text('Counter: ${state.count}'),
             ),
-            Dripping<DripCounter, DripCounterState>(
-              listener: (context, state) {},
-              builder: (context, state) => Text('Counter: ${state.count}'),
-            ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             DropWidget<DripCounter, DripCounterState, String>(
               builder: (context, state) {
                 return Text('Freeze $state');
               },
               selector: (state) => state.strNum,
             ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 40, right: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                DripProvider.of<DripCounter>(context).dispatch(IncrementCountAction());
-              },
-              child: Icon(Icons.plus_one),
-            ),
-            SizedBox(width: 10),
-            ElevatedButton(
-              onPressed: () {
-                DripProvider.of<DripCounter>(context).dispatch(ClearEvent());
-              },
-              child: Icon(Icons.close),
-            ),
-            SizedBox(width: 10),
-            ElevatedButton(
-              onPressed: () {
-                DripProvider.of<DripCounter>(context).freeze();
-              },
-              child: Icon(Icons.numbers),
-            ),
-            SizedBox(width: 10),
-            ElevatedButton(
-              onPressed: () {
-                DripProvider.of<DripCounter>(context).dispatch(DrainMemory());
-              },
-              child: Icon(Icons.clear_all),
-            ),
-            SizedBox(width: 10),
-            ElevatedButton(
-              onPressed: () {
-                DripProvider.of<DripCounter>(context).dispatch(UndoMemory());
-              },
-              child: Icon(Icons.undo),
+            SizedBox(height: 60),
+            Wrap(
+              children: [
+                TextButton(
+                    onPressed: () {
+                      DripProvider.of<DripCounter>(context).dispatch(IncrementCountAction());
+                    },
+                    child: const Text('Add +')),
+                TextButton(
+                    onPressed: () {
+                      DripProvider.of<DripCounter>(context).dispatch(ClearEvent());
+                    },
+                    child: const Text('Clear')),
+                TextButton(
+                    onPressed: () {
+                      DripProvider.of<DripCounter>(context).freeze();
+                    },
+                    child: const Text('Freeze')),
+                TextButton(
+                    onPressed: () {
+                      DripProvider.of<DripCounter>(context).dispatch(UndoMemory());
+                    },
+                    child: const Text('Undo')),
+                TextButton(
+                    onPressed: () {
+                      DripProvider.of<DripCounter>(context).dispatch(DrainMemory());
+                    },
+                    child: const Text('Drain Memory')),
+              ],
             ),
           ],
         ),

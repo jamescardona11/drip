@@ -6,8 +6,7 @@ class DripCounter extends Drip<DripCounterState> {
   DripCounter()
       : super(DripCounterState(), interceptors: [
           MemoryInterceptor<DripCounterState>(historySize: 5),
-          DoubleCountMiddleware(),
-        ]) {}
+        ]);
 
   void increment() {
     print('Increment');
@@ -20,27 +19,22 @@ class DripCounter extends Drip<DripCounterState> {
   }
 
   @override
-  Stream<DripCounterState> mutableStateOf(event) async* {
+  Stream<DripCounterState> mutableStateOf(event, state) async* {
     if (event is ClearEvent) {
       print('Clear');
-      // emit(state.copyWith(count: 0));
       yield state.copyWith(count: 0);
     }
   }
 }
 
-class DoubleCountMiddleware extends BaseInterceptor<DripCounterState> {
+class ClearEvent extends DripEvent<DripCounterState> {}
+
+class IncrementCountAction extends DripAction<DripCounterState> {
   @override
-  Stream<DripCounterState> call(DripEvent event, DripCounterState state) async* {
-    if (state.count % 2 == 0) {
-      yield state.copyWith(count: state.count * 2);
-    } else {
-      yield state;
-    }
+  Stream<DripCounterState> call(DripCounterState state) async* {
+    yield state.copyWith(count: state.count + 1);
   }
 }
-
-class ClearEvent extends DripEvent<DripCounterState> {}
 
 class DripCounterState {
   final int count;
@@ -73,11 +67,4 @@ class DripCounterState {
 
   @override
   String toString() => 'DripCounterState(count: $count, strNum: $strNum)';
-}
-
-class IncrementCountAction extends DripAction<DripCounterState> {
-  @override
-  Stream<DripCounterState> call(DripCounterState state) async* {
-    yield state.copyWith(count: state.count + 1);
-  }
 }

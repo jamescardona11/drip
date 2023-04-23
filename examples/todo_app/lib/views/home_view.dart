@@ -32,7 +32,6 @@ class _HomeViewState extends State<HomeView> {
                   ),
                   child: Column(
                     children: [
-                      const SearchBoxWidget(),
                       Container(
                         margin: const EdgeInsets.only(
                           top: 50,
@@ -58,23 +57,6 @@ class _HomeViewState extends State<HomeView> {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            GestureDetector(
-                              onTap: drip.handleUndo,
-                              child: Container(
-                                padding: const EdgeInsets.all(0),
-                                margin: const EdgeInsets.symmetric(horizontal: 6),
-                                height: 35,
-                                width: 35,
-                                decoration: BoxDecoration(
-                                  color: greyColor,
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: const Icon(
-                                  Icons.restart_alt,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            )
                           ],
                         ),
                       ),
@@ -152,46 +134,6 @@ class _HomeViewState extends State<HomeView> {
               ],
             );
           },
-        ),
-      ),
-    );
-  }
-}
-
-class SearchBoxWidget extends StatelessWidget {
-  const SearchBoxWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: TextField(
-        onChanged: (value) {
-          if (value.length >= 3) {
-            // other way to handle the state mutation, trigger individual actions
-            context.read<DripToDo>().dispatch(DripSearchAction(value));
-          }
-        },
-        decoration: const InputDecoration(
-          contentPadding: EdgeInsets.all(0),
-          prefixIcon: Icon(
-            Icons.search,
-            color: blackColor,
-            size: 20,
-          ),
-          prefixIconConstraints: BoxConstraints(
-            maxHeight: 20,
-            minWidth: 25,
-          ),
-          border: InputBorder.none,
-          hintText: 'Search',
-          hintStyle: TextStyle(color: greyColor),
         ),
       ),
     );

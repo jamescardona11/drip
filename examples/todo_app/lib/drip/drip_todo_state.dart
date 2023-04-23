@@ -5,20 +5,18 @@ import '../model/todo.dart';
 
 class DripToDoState {
   final List<ToDo> toDos;
-  final List<ToDo> searchResults;
+
   final String searchText;
   final int deletedToDos;
 
   DripToDoState({
     this.toDos = const [],
-    this.searchResults = const [],
     this.searchText = '',
     this.deletedToDos = 0,
   });
 
   factory DripToDoState.initialState() => DripToDoState(
         toDos: [],
-        searchResults: [],
       );
 
   DripToDoState copyWith({
@@ -29,7 +27,6 @@ class DripToDoState {
   }) {
     return DripToDoState(
       toDos: List.from(toDos ?? this.toDos),
-      searchResults: searchResults ?? this.searchResults,
       searchText: searchText ?? this.searchText,
       deletedToDos: deletedToDos ?? this.deletedToDos,
     );
@@ -37,16 +34,13 @@ class DripToDoState {
 
   @override
   int get hashCode {
-    return toDos.hashCode ^ searchResults.hashCode ^ searchText.hashCode ^ deletedToDos.hashCode;
+    return toDos.hashCode ^ searchText.hashCode ^ deletedToDos.hashCode;
   }
 
   @override
   bool operator ==(covariant DripToDoState other) {
     if (identical(this, other)) return true;
 
-    return listEquals(other.toDos, toDos) &&
-        listEquals(other.searchResults, searchResults) &&
-        other.searchText == searchText &&
-        other.deletedToDos == deletedToDos;
+    return listEquals(other.toDos, toDos) && other.searchText == searchText && other.deletedToDos == deletedToDos;
   }
 }

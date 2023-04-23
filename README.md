@@ -11,29 +11,124 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Drip is a wrapper for InheritedWidget to be able to handle the state management using Streams.
+This is a personal project and is under-construction.
+
+<p align="center">
+<img src="https://github.com/jamescardona11/drip/blob/main/img/logo.png?raw=true" height="250" alt="Drip Package" />
+</p>
+
+
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Divide the handlers in small `DripActions`
+- Provider different widgets to react a new changes in the state
+- Have the possibility to use Interceptor
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Import this library into your project:
+
+```yaml
+drip: ^latest_version
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
 ```dart
-const like = 'sample';
+DripProvider<DripCounter>(
+  create: (_) => DripCounter(),
+  child: DripCounterPage(),
+)
+
+
+class DripCounterPage extends StatelessWidget {
+  const DripCounterPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Dripper<DripCounter, int>(
+              builder: (context, state) => Text('Counter: ${state.count}'),
+            ),
+            TextButton(
+              onPressed: () {
+                DripProvider.of<DripCounter>(context).increment();
+              },
+              child: const Text('Add +'),
+            ),
+          ]
+        ),
+      ),
+    );
+  }
+}
+
+
+
+class DripCounter extends Drip<int> {
+  DripCounter() : super(0);
+
+  void increment() {
+    print('Increment');
+    leak(state + 1);
+  }
+}
+
+
 ```
 
-## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+### Examples
+
+1. [Counter](https://github.com/jamescardona11/argo/tree/main/example/counter_app): Simple example of use the drip
+2. [Todo](https://github.com/jamescardona11/argo/tree/main/example/todo_app): More complex example to use drip
+
+
+
+Flutter is a game-changing technology that will revolutionize not just development, but software itself. A big thank you to the Flutter team for building such an amazing platform 💙 
+
+<a href="https://github.com/flutter/flutter">
+  <img alt="Flutter"
+       src="https://github.com/jamescardona11/argo/blob/main/img/flutter_logo.png?raw=true" />
+</a>
+
+
+## Maintainers
+
+- [James Cardona](https://github.com/jamescardona11)
+
+You are welcome to contribute :3
+
+
+## TODO
+- Create test
+- Improve de readme
+
+## License
+
+    MIT License
+    Copyright (c) 2023 James Cardona
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.

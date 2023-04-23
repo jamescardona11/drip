@@ -8,11 +8,6 @@ class DripCounter extends Drip<DripCounterState> {
           MemoryInterceptor<DripCounterState>(historySize: 5),
         ]);
 
-  void increment() {
-    print('Increment');
-    leak(state.copyWith(count: state.count + 1));
-  }
-
   void freeze() {
     print('freeze');
     leak(state.copyWith(str: '${state.count}'));

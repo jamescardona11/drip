@@ -31,13 +31,13 @@ abstract class Drip<DState> extends _BaseDrip<DState> {
   // ?? is necessary avoid leak a newState method when the newState is the same that the current?
   @protected
   @override
-  void leak(DState newState) {
+  void leak(DState state) {
     if (_stateController.isClosed) {
       debugPrint('Drip: emit() called after was closed');
       return;
     }
-    _setState(newState);
-    dispatch(GenericStateChangeAction(newState));
+    _setState(state);
+    dispatch(GenericStateChangeAction(state));
   }
 
   /// This method is used to change the state of the Drip dispatching a new [DripEvent] or [DripAction]

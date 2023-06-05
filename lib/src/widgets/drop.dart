@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import '../drip_core/drip_core.dart';
@@ -44,9 +45,19 @@ class _DropWidgetState<D extends Drip<DState>, DState, SelectedState> extends St
     return DripListener<D, DState>(
       listener: (context, state) {
         final selectedState = widget.selector(state);
-        if (_state != selectedState) setState(() => _state = selectedState);
+        if (selectedState is List && !listEquals(selectedState, _state as List)) {
+          _update(selectedState);
+        } else if (selectedState is Map && !mapEquals(selectedState, _state as Map)) {
+          _update(selectedState);
+        } else if (_state != selectedState) {
+          _update(selectedState);
+        }
       },
       child: widget.builder(context, _state),
     );
+  }
+
+  void _update(SelectedState selectedState) {
+    setState(() => _state = selectedState);
   }
 }

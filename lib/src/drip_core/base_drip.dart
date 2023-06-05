@@ -31,7 +31,7 @@ abstract class _BaseDrip<DState> {
   /// This method is to change the current state into a new state
   /// This method start a new `DripAction` called [GenericStateChangeAction]
   /// Is similar to emit in bloc
-  void leak(DState newState);
+  void leak(DState state);
 
   /// THis method should be called when you want to dispatch a new event
   /// The sate mutation when this method is called is handle for `mutableStateOf`

@@ -1,52 +1,76 @@
+import 'dart:async';
+
+import 'package:drip/src/drip_misc/drip_misc.dart';
+import 'package:drip/src/widgets/dropper.dart';
 import 'package:flutter/widgets.dart';
 
-import '../drip_core/drip_core.dart';
-import '../drip_misc/drip_misc.dart';
-import '../widgets/drip_listener.dart';
-import '../widgets/widgets.dart';
-
-/// {@template dripping}
-///
-/// This class provide a builder and listener for a  [Drip]
-/// The class is similar to Consumer in bloc
-/// The builder is called when the drip emits a new state
-/// The listener is called when the drip emits a new state different from the previous one
-///
-/// {@endtemplate}
+import '../drip_core.dart';
 
 class Dripping<D extends Drip<DState>, DState> extends StatefulWidget {
-  /// default constructor
   const Dripping({
     super.key,
-    required this.builder,
-    required this.listener,
+    required this.child,
+    this.listener,
+    this.drip,
   });
 
-  final DBuilder<D, DState> builder;
-  final DListener<D, DState> listener;
+  final DListener<D, DState>? listener;
+  final Widget child;
+  final D? drip;
 
   @override
   State<Dripping<D, DState>> createState() => _DrippingState<D, DState>();
 }
 
 class _DrippingState<D extends Drip<DState>, DState> extends State<Dripping<D, DState>> {
+  StreamSubscription<DState>? _subscription;
+  DState? _previousState;
   late D _drip;
 
   @override
   void initState() {
-    _drip = DripProvider.of<D>(context);
     super.initState();
+    _drip = widget.drip ?? Dropper.of<D>(context);
+
+    if (widget.listener != null) {
+      _subscribe();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return DripListener<D, DState>(
-      drip: _drip,
-      listener: widget.listener,
-      child: Dripper<D, DState>(
-        drip: _drip,
-        builder: widget.builder,
-      ),
-    );
+    return widget.child;
+  }
+
+  @override
+  void didUpdateWidget(Dripping<D, DState> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.drip != widget.drip) {
+      _drip = widget.drip ?? Dropper.of<D>(context);
+
+      _unsubscribe();
+      if (widget.listener != null) {
+        _subscribe();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _unsubscribe();
+    super.dispose();
+  }
+
+  void _subscribe() {
+    _subscription = _drip.stateStream.listen((state) {
+      if (_previousState != state) {
+        widget.listener!.call(_drip, state);
+        _previousState = state;
+      }
+    });
+  }
+
+  void _unsubscribe() {
+    _subscription?.cancel();
   }
 }

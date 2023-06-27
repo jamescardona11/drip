@@ -1,9 +1,10 @@
+import 'package:drip/src/drip_core.dart';
+import 'package:drip/src/drip_misc/drip_misc.dart';
+import 'package:drip/src/widgets/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import '../drip_core/drip_core.dart';
-import '../drip_misc/drip_misc.dart';
-import '../widgets/drip_listener.dart';
+import 'dripping.dart';
 
 /// {@template drop}
 ///
@@ -15,7 +16,6 @@ import '../widgets/drip_listener.dart';
 /// {@endtemplate}
 
 class DropWidget<D extends Drip<DState>, DState, SelectedState> extends StatefulWidget {
-  /// default constructor
   const DropWidget({
     super.key,
     required this.builder,
@@ -36,13 +36,13 @@ class _DropWidgetState<D extends Drip<DState>, DState, SelectedState> extends St
   @override
   void initState() {
     super.initState();
-    _drip = DripProvider.of<D>(context);
+    _drip = Dropper.of<D>(context);
     _state = widget.selector(_drip.state);
   }
 
   @override
   Widget build(BuildContext context) {
-    return DripListener<D, DState>(
+    return Dripping<D, DState>(
       listener: (context, state) {
         final selectedState = widget.selector(state);
         if (selectedState is List && !listEquals(selectedState, _state as List)) {

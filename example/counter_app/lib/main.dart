@@ -13,8 +13,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      home: DripProvider<DripCounter>(
-        create: (_) => DripCounter(),
+      home: Dropper<DripCounter>(
+        create: DripCounter(),
         child: DripCounterPage(),
       ),
     );
@@ -46,29 +46,19 @@ class DripCounterPage extends StatelessWidget {
               children: [
                 TextButton(
                     onPressed: () {
-                      DripProvider.of<DripCounter>(context).dispatch(IncrementCountAction());
+                      Dropper.of<DripCounter>(context).increment();
                     },
                     child: const Text('Add +')),
                 TextButton(
                     onPressed: () {
-                      DripProvider.of<DripCounter>(context).dispatch(ClearEvent());
+                      Dropper.of<DripCounter>(context).clear();
                     },
                     child: const Text('Clear')),
                 TextButton(
                     onPressed: () {
-                      DripProvider.of<DripCounter>(context).freeze();
+                      Dropper.of<DripCounter>(context).freeze();
                     },
                     child: const Text('Freeze')),
-                TextButton(
-                    onPressed: () {
-                      DripProvider.of<DripCounter>(context).dispatch(UndoMemory());
-                    },
-                    child: const Text('Undo')),
-                TextButton(
-                    onPressed: () {
-                      DripProvider.of<DripCounter>(context).dispatch(DrainMemory());
-                    },
-                    child: const Text('Drain Memory')),
               ],
             ),
           ],

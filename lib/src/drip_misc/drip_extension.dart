@@ -2,26 +2,20 @@
 
 import 'package:flutter/material.dart';
 
-import '../drip_core/drip_core.dart';
-import 'drip_provider.dart';
+import '../drip_core.dart';
+import '../widgets/dropper.dart';
 
 /// {@template drip_extension}
 ///
-/// DripProvider extension help to access the [Drip] methods using the context
+/// Dropper extension help to access the [Drip] methods using the context
 ///
 /// {@endtemplate}
 extension DripProviderX on BuildContext {
   D read<D extends Drip>() {
-    return DripProvider.read<D>(this);
+    return Dropper.read<D>(this);
   }
 
   D watch<D extends Drip>() {
-    return DripProvider.watch<D>(this);
-  }
-
-  void dispatch<D extends Drip>(
-    DripEvent event,
-  ) {
-    return DripProvider.dispatch<D>(this, event);
+    return Dropper.watch<D>(this);
   }
 }

@@ -13,8 +13,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DripProvider(
-      create: (context) => DripToDo(),
+    return Dropper(
+      create: DripToDo(),
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'ToDo App',

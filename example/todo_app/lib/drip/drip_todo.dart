@@ -3,12 +3,8 @@ import 'package:drip/drip.dart';
 import '../model/todo.dart';
 import 'drip_todo_state.dart';
 
-class DripToDo extends Drip<DripToDoState> with DefaultDripLoggerMixin {
-  DripToDo()
-      : super(DripToDoState(), interceptors: [
-          MemoryInterceptor(),
-          _DripInnerInterceptorCounter(),
-        ]) {
+class DripToDo extends Drip<DripToDoState> {
+  DripToDo() : super(DripToDoState()) {
     _initToDo();
   }
 
@@ -23,14 +19,11 @@ class DripToDo extends Drip<DripToDoState> with DefaultDripLoggerMixin {
     ]));
   }
 
-  @override
-  Stream<DripToDoState> mutableStateOf(DripEvent event, DripToDoState state) async* {
-    if (event is ToDoDeletedEvent) {
-      final todoList = state.toDos;
-      todoList.removeWhere((item) => item.id == event.id);
+  void delete(String id) {
+    final todoList = state.toDos;
+    todoList.removeWhere((item) => item.id == id);
 
-      yield state.copyWith(toDos: todoList);
-    }
+    leak(state.copyWith(toDos: todoList));
   }
 
   void handleToDoChange(String id) {
@@ -42,43 +35,12 @@ class DripToDo extends Drip<DripToDoState> with DefaultDripLoggerMixin {
     leak(state.copyWith(toDos: toDos));
   }
 
-  void handleUndo() {
-    dispatch(UndoMemory());
-  }
-}
-
-/// this is handle in the DripTodo for mutableStateOf
-class ToDoDeletedEvent extends DripEvent<DripToDoState> {
-  final String id;
-
-  ToDoDeletedEvent(this.id);
-}
-
-/// The DripAction is triggered by the Drip.dispatch
-/// Is handle in _eventControllerTransformer in the _BaseDrip
-class DripAddNewToDo extends DripAction<DripToDoState> {
-  final String toDoText;
-
-  DripAddNewToDo(this.toDoText);
-
-  @override
-  Stream<DripToDoState> call(DripToDoState state) {
+  void addNewToDoItem(String toDoText) {
     final newToDo = ToDo(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       todoText: toDoText,
     );
 
-    return Stream.value(state.copyWith(toDos: List.from(state.toDos)..add(newToDo)));
-  }
-}
-
-class _DripInnerInterceptorCounter extends BaseInterceptor<DripToDoState> {
-  @override
-  Stream<DripToDoState> call(DripEvent event, DripToDoState state) {
-    if (event is ToDoDeletedEvent) {
-      return Stream.value(state.copyWith(deletedToDos: state.deletedToDos + 1));
-    }
-
-    return Stream.value(state);
+    return leak(state.copyWith(toDos: List.from(state.toDos)..add(newToDo)));
   }
 }

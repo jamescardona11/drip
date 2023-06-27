@@ -14,7 +14,7 @@ class DripListener<D extends Drip<DState>, DState> extends StatefulWidget {
     this.drip,
   });
 
-  final DListener<DState> listener;
+  final DListener<D, DState> listener;
   final Widget child;
   final D? drip;
 
@@ -60,7 +60,7 @@ class _DripListenerState<D extends Drip<DState>, DState> extends State<DripListe
   void _subscribe() {
     _subscription = _drip.stateStream.listen((state) {
       if (_previousState != state) {
-        widget.listener.call(context, state);
+        widget.listener.call(_drip, state);
         _previousState = state;
       }
     });

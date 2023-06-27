@@ -6,11 +6,8 @@ typedef DCreate<D extends Drip> = D Function(BuildContext context);
 
 typedef DBuilder<D extends Drip<DState>, DState> = Widget Function(D drip, DState state);
 
-typedef DListener<DState> = void Function(BuildContext context, DState state);
+typedef DListener<D extends Drip, DState> = void Function(D drip, DState state);
 
 typedef Selector<DState, T> = T Function(DState state);
 
-typedef SBuilder<SelectedState> = Widget Function(
-  BuildContext context,
-  SelectedState data,
-);
+typedef SBuilder<D extends Drip, SelectedState> = Widget Function(D drip, SelectedState data);

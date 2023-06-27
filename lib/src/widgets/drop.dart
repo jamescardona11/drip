@@ -22,7 +22,7 @@ class DropWidget<D extends Drip<DState>, DState, SelectedState> extends Stateful
     required this.selector,
   });
 
-  final SBuilder<SelectedState> builder;
+  final SBuilder<D, SelectedState> builder;
   final Selector<DState, SelectedState> selector;
 
   @override
@@ -49,11 +49,11 @@ class _DropWidgetState<D extends Drip<DState>, DState, SelectedState> extends St
           _update(selectedState);
         } else if (selectedState is Map && !mapEquals(selectedState, _state as Map)) {
           _update(selectedState);
-        } else if (_state != selectedState) {
+        } else if (selectedState is! List && selectedState is! Map && _state != selectedState) {
           _update(selectedState);
         }
       },
-      child: widget.builder(context, _state),
+      child: widget.builder(_drip, _state),
     );
   }
 

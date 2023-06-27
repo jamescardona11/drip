@@ -23,7 +23,7 @@ class Dripping<D extends Drip<DState>, DState> extends StatefulWidget {
   });
 
   final DBuilder<D, DState> builder;
-  final DListener<DState> listener;
+  final DListener<D, DState> listener;
 
   @override
   State<Dripping<D, DState>> createState() => _DrippingState<D, DState>();

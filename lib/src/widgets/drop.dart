@@ -1,5 +1,4 @@
 import 'package:drip/src/drip_core.dart';
-import 'package:drip/src/drip_misc/drip_misc.dart';
 import 'package:drip/src/widgets/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -14,6 +13,9 @@ import 'dripping.dart';
 /// The [selector] function is called with the current state of the [Drip] and should return a value that is used to determine whether the [builder] function should be called.
 ///
 /// {@endtemplate}
+
+typedef Selector<DState, T> = T Function(DState state);
+typedef SBuilder<D extends Drip, SelectedState> = Widget Function(D drip, SelectedState data);
 
 class DropWidget<D extends Drip<DState>, DState, SelectedState> extends StatefulWidget {
   const DropWidget({

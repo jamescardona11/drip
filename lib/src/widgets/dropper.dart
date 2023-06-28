@@ -10,6 +10,8 @@ import '../drip_core.dart';
 ///
 /// {@endtemplate}
 
+typedef DCreate<D extends Drip> = D Function(BuildContext context);
+
 class Dropper<D extends Drip> extends StatelessWidget {
   const Dropper({
     Key? key,
@@ -90,7 +92,22 @@ class ProviderError extends Error {
 
     return '''Error: No Dropper<$type> found. To fix, please try:
               * Wrapping your MaterialApp with the Dropper<$type>.
-              * Providing full type information to Dropper<$type>, Dropper.of<$type> and context.get<$type>() method.
+              * Providing full type information to Dropper<$type>, Dropper.of<$type> method.
           ''';
+  }
+}
+
+/// {@template drip_extension}
+///
+/// Dropper extension help to access the [Drip] methods using the context
+///
+/// {@endtemplate}
+extension DripProviderX on BuildContext {
+  D read<D extends Drip>() {
+    return Dropper.read<D>(this);
+  }
+
+  D watch<D extends Drip>() {
+    return Dropper.watch<D>(this);
   }
 }

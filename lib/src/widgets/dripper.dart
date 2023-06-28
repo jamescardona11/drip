@@ -2,7 +2,6 @@ import 'package:drip/src/widgets/dripping.dart';
 import 'package:flutter/widgets.dart';
 
 import '../drip_core.dart';
-import '../drip_misc/drip_misc.dart';
 import 'dropper.dart';
 
 /// {@template dripper}
@@ -14,6 +13,9 @@ import 'dropper.dart';
 /// The listener is called when the drip emits a new state different from the previous one
 ///
 /// {@endtemplate}
+
+typedef DBuilder<D extends Drip<DState>, DState> = Widget Function(D drip, DState state);
+
 class Dripper<D extends Drip<DState>, DState> extends StatefulWidget {
   const Dripper({
     super.key,

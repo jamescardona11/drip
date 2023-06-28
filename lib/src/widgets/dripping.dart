@@ -1,10 +1,11 @@
 import 'dart:async';
 
-import 'package:drip/src/drip_misc/drip_misc.dart';
 import 'package:drip/src/widgets/dropper.dart';
 import 'package:flutter/widgets.dart';
 
 import '../drip_core.dart';
+
+typedef DListener<D extends Drip, DState> = void Function(D drip, DState state);
 
 class Dripping<D extends Drip<DState>, DState> extends StatefulWidget {
   const Dripping({

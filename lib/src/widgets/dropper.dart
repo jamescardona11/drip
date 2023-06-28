@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:nested/nested.dart';
 
 import '../drip_core.dart';
 
@@ -10,17 +11,16 @@ import '../drip_core.dart';
 ///
 /// {@endtemplate}
 
-typedef DCreate<D extends Drip> = D Function(BuildContext context);
+typedef DCreate<D> = D Function(BuildContext context);
 
-class Dropper<D extends Drip> extends StatelessWidget {
+class Dropper<D extends Drip> extends SingleChildStatelessWidget {
   const Dropper({
     Key? key,
-    required this.create,
-    this.child,
+    required this.drip,
+    super.child,
   }) : super(key: key);
 
-  final D create;
-  final Widget? child;
+  final D drip;
 
   static D of<D extends Drip>(BuildContext context, {bool listen = false}) {
     if (D == dynamic) {
@@ -49,17 +49,10 @@ class Dropper<D extends Drip> extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWithChild(BuildContext context, Widget? child) {
     return _DropperIW(
-      drip: create,
+      drip: drip,
       child: child ?? const SizedBox(),
-    );
-  }
-
-  Dropper<D> copyWith(Widget child) {
-    return Dropper<D>(
-      create: create,
-      child: child,
     );
   }
 }
@@ -110,4 +103,33 @@ extension DripProviderX on BuildContext {
   D watch<D extends Drip>() {
     return Dropper.watch<D>(this);
   }
+}
+
+class DripProvider<D extends Drip> extends StatelessWidget {
+  final DCreate<D> create;
+  final Widget child;
+
+  const DripProvider({
+    super.key,
+    required this.create,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      children: [
+        Dropper<D>(drip: create(context)),
+      ],
+      child: child,
+    );
+  }
+}
+
+class MultiProvider extends Nested {
+  MultiProvider({
+    super.key,
+    required super.children,
+    super.child,
+  });
 }

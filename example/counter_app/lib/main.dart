@@ -13,8 +13,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      home: Dropper<DripCounter>(
-        create: DripCounter(),
+      home: DripProvider(
+        create: (context) => DripCounter(),
         child: DripCounterPage(),
       ),
     );

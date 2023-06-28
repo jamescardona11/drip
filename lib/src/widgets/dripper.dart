@@ -65,8 +65,8 @@ class _DripperState<D extends Drip<DState>, DState> extends State<Dripper<D, DSt
 
     /// create a new drip using a dropper
     if (widget.create != null) {
-      return Dropper<D>(
-        create: widget.create!,
+      return DripProvider(
+        create: (context) => widget.create!,
         child: stream,
       );
     }

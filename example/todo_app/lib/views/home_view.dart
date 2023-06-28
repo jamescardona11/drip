@@ -22,6 +22,7 @@ class _HomeViewState extends State<HomeView> {
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Dripper<DripToDo, DripToDoState>(
+          create: DripToDo(),
           builder: (drip, state) {
             return Stack(
               children: [

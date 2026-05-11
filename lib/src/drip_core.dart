@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
+import 'drip_observer.dart';
+
 /// {@template drip}
 ///
 /// Minimal Cubit-style state holder.
@@ -9,6 +11,10 @@ import 'package:flutter/foundation.dart';
 /// Subclass and call [leak] to publish a new state. Every [Drip] exposes a
 /// broadcast [stateStream] so listeners outside the widget tree (tests,
 /// other services) can consume updates.
+///
+/// All lifecycle events (create / change / close) are reported to the
+/// global [Drip.observer]. The default observer is a no-op; install a
+/// custom [DripObserver] subclass for logging, analytics, etc.
 ///
 /// {@endtemplate}
 abstract class Drip<DState> {
@@ -21,7 +27,14 @@ abstract class Drip<DState> {
         _controller.add(_state);
       },
     );
+    observer.onCreate(this);
   }
+
+  /// Global observer notified for every [Drip] lifecycle event.
+  ///
+  /// Set this once at startup (typically in `main`) to enable logging,
+  /// analytics, or any cross-cutting concern. Defaults to a no-op.
+  static DripObserver observer = const DripObserver();
 
   late DState _state;
   late final StreamController<DState> _controller;
@@ -39,13 +52,16 @@ abstract class Drip<DState> {
       debugPrint('Drip: leak() called after the drip was closed');
       return;
     }
+    final previous = _state;
     _state = newState;
     _controller.add(newState);
+    observer.onChange(this, previous, newState);
   }
 
   /// Closes the underlying stream controller. Once closed, [leak] becomes a
   /// no-op and existing subscribers receive `done`.
   void close() {
+    observer.onClose(this);
     _controller.close();
   }
 

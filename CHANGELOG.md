@@ -17,7 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Dropper.of<D>` / `Dropper.read<D>` / `Dropper.watch<D>` and `BuildContext.read<D>()` / `BuildContext.watch<D>()` extension.
 - `DropWidget<D, S, T>` — selector widget that rebuilds only when `selector(state)` returns a new value. Supports `List`, `Map`, and primitive equality out of the box.
 - `Dripping<D, S>` — listener-only widget that does not rebuild its child on state changes.
+- `DripObserver` — global hook with `onCreate` / `onChange(previous, next)` / `onClose` callbacks. Default is a no-op; install via `Drip.observer = MyObserver()` to plug in logging, analytics, or undo history.
 - `topics`, `repository`, and richer `description` in `pubspec.yaml` to improve pub.dev discoverability.
+- GitHub Actions CI: format check, analyze, tests with coverage, and `pub publish --dry-run`. Matrix on Flutter `stable` + `beta`.
 
 ### Removed
 - `DripEvent`, `DripAction` and the `dispatch` method (no event pipeline anymore).

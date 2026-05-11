@@ -128,6 +128,26 @@ MultiProvider(
 
 `MultiProvider` is a thin alias over `Nested` from [`package:nested`](https://pub.dev/packages/nested), so the children compose without indentation hell.
 
+## Observability
+
+For logging, analytics, or debugging, install a `DripObserver` at startup. It's a single global hook with no-op defaults — override only what you need:
+
+```dart
+class LoggingObserver extends DripObserver {
+  @override
+  void onChange(Drip<Object?> drip, Object? previous, Object? next) {
+    debugPrint('${drip.runtimeType}: $previous -> $next');
+  }
+}
+
+void main() {
+  Drip.observer = LoggingObserver();
+  runApp(const MyApp());
+}
+```
+
+Available hooks: `onCreate`, `onChange(previous, next)`, `onClose`.
+
 ## Mental model
 
 ```

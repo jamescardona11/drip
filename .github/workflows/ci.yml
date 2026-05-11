@@ -37,7 +37,7 @@ jobs:
         run: flutter test --coverage
 
       - name: Upload coverage artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: matrix.flutter-channel == 'stable'
         with:
           name: coverage

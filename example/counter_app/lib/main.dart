@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 import 'drip_counter.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'Material App',
       home: DripProvider(
         create: (context) => DripCounter(),
-        child: DripCounterPage(),
+        child: const DripCounterPage(),
       ),
     );
   }
@@ -41,7 +41,7 @@ class DripCounterPage extends StatelessWidget {
               },
               selector: (state) => state.strNum,
             ),
-            SizedBox(height: 60),
+            const SizedBox(height: 60),
             Wrap(
               children: [
                 TextButton(

@@ -3,21 +3,32 @@ import 'package:drip/src/widgets/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import 'dripping.dart';
+/// A function that picks a slice of [DState] of type [T].
+typedef Selector<DState, T> = T Function(DState state);
 
-/// {@template drop}
+/// A builder that receives the [Drip] instance and the value picked by a
+/// [Selector].
+typedef SBuilder<D extends Drip<Object?>, SelectedState> = Widget Function(
+  D drip,
+  SelectedState data,
+);
+
+/// {@template drop_widget}
 ///
-/// A widget that listens to a [Drip] and rebuilds when the [Drip] emits a new state.
-/// That state is then passed to the [builder] function.
-/// To avoid unnecessary rebuilds, the [builder] function is only called when the [selector] function returns a new value.
-/// The [selector] function is called with the current state of the [Drip] and should return a value that is used to determine whether the [builder] function should be called.
+/// A consumer widget that rebuilds only when the value picked by [selector]
+/// changes.
+///
+/// Equality is checked as follows:
+/// - `List` values are compared with [listEquals]
+/// - `Map` values are compared with [mapEquals]
+/// - all other values are compared with `==`
 ///
 /// {@endtemplate}
 
-typedef Selector<DState, T> = T Function(DState state);
-typedef SBuilder<D extends Drip, SelectedState> = Widget Function(D drip, SelectedState data);
-
-class DropWidget<D extends Drip<DState>, DState, SelectedState> extends StatefulWidget {
+/// {@macro drop_widget}
+class DropWidget<D extends Drip<DState>, DState, SelectedState>
+    extends StatefulWidget {
+  /// Creates a [DropWidget] driven by [selector] over the [Drip] of type [D].
   const DropWidget({
     super.key,
     required this.builder,
@@ -28,10 +39,12 @@ class DropWidget<D extends Drip<DState>, DState, SelectedState> extends Stateful
   final Selector<DState, SelectedState> selector;
 
   @override
-  State<DropWidget<D, DState, SelectedState>> createState() => _DropWidgetState<D, DState, SelectedState>();
+  State<DropWidget<D, DState, SelectedState>> createState() =>
+      _DropWidgetState<D, DState, SelectedState>();
 }
 
-class _DropWidgetState<D extends Drip<DState>, DState, SelectedState> extends State<DropWidget<D, DState, SelectedState>> {
+class _DropWidgetState<D extends Drip<DState>, DState, SelectedState>
+    extends State<DropWidget<D, DState, SelectedState>> {
   late D _drip;
   late SelectedState _state;
 
@@ -45,13 +58,17 @@ class _DropWidgetState<D extends Drip<DState>, DState, SelectedState> extends St
   @override
   Widget build(BuildContext context) {
     return Dripping<D, DState>(
-      listener: (context, state) {
+      listener: (_, state) {
         final selectedState = widget.selector(state);
-        if (selectedState is List && !listEquals(selectedState, _state as List)) {
+        if (selectedState is List &&
+            !listEquals(selectedState, _state as List)) {
           _update(selectedState);
-        } else if (selectedState is Map && !mapEquals(selectedState, _state as Map)) {
+        } else if (selectedState is Map &&
+            !mapEquals(selectedState, _state as Map)) {
           _update(selectedState);
-        } else if (selectedState is! List && selectedState is! Map && _state != selectedState) {
+        } else if (selectedState is! List &&
+            selectedState is! Map &&
+            _state != selectedState) {
           _update(selectedState);
         }
       },

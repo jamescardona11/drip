@@ -1,19 +1,24 @@
 name: drip
-description: Minimalist chunked State Management for Flutter
-version: 0.0.1
+description: Minimalist Cubit-style state management for Flutter using Streams and InheritedWidget.
+version: 0.1.0
 homepage: https://github.com/jamescardona11/drip
+repository: https://github.com/jamescardona11/drip
+topics:
+  - state-management
+  - stream
+  - inherited-widget
 
 environment:
-  sdk: '>=3.0.1 <4.0.0'
-  flutter: ">=1.17.0"
+  sdk: '>=3.4.0 <4.0.0'
+  flutter: '>=3.16.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  meta: ^1.9.1
+  meta: ^1.17.0
   nested: ^1.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^6.0.0

@@ -7,7 +7,7 @@ import '../drip/drip_todo_state.dart';
 import 'todo_item.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({Key? key}) : super(key: key);
+  const HomeView({super.key});
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -67,9 +67,11 @@ class _HomeViewState extends State<HomeView> {
                           itemBuilder: (context, index) => ToDoItemWidget(
                             todo: state.toDos[index],
                             // to show how can call methods from drip
-                            toDoChanged: () => drip.handleToDoChange(state.toDos[index].id),
+                            toDoChanged: () =>
+                                drip.handleToDoChange(state.toDos[index].id),
                             // other way to handle the state mutation, the event trigger drip.mutableStateOf
-                            toDoDeleted: () => drip.delete(state.toDos[index].id),
+                            toDoDeleted: () =>
+                                drip.delete(state.toDos[index].id),
                           ),
                         ),
                       )
@@ -104,7 +106,9 @@ class _HomeViewState extends State<HomeView> {
                         ),
                         child: TextField(
                           controller: _todoController,
-                          decoration: const InputDecoration(hintText: 'Add a new todo item', border: InputBorder.none),
+                          decoration: const InputDecoration(
+                              hintText: 'Add a new todo item',
+                              border: InputBorder.none),
                         ),
                       ),
                     ),
@@ -115,11 +119,13 @@ class _HomeViewState extends State<HomeView> {
                       ),
                       child: ElevatedButton(
                         onPressed: () {
-                          if (_todoController.text.isNotEmpty) drip.addNewToDoItem(_todoController.text);
+                          if (_todoController.text.isNotEmpty) {
+                            drip.addNewToDoItem(_todoController.text);
+                          }
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: blueColor,
-                          minimumSize: Size(60, 60),
+                          backgroundColor: blueColor,
+                          minimumSize: const Size(60, 60),
                           elevation: 10,
                         ),
                         child: const Text(

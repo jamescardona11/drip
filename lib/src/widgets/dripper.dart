@@ -4,22 +4,24 @@ import 'package:flutter/widgets.dart';
 import '../drip_core.dart';
 import 'dropper.dart';
 
-/// {@template dripper}
-///
-/// Dripper is a widget that rebuilds when the [Drip] state changes.
-/// This class provide a builder and listener for a  [Drip]
-/// The class is similar to Consumer in bloc
-/// The builder is called when the drip emits a new state
-/// The listener is called when the drip emits a new state different from the previous one
-///
-/// {@endtemplate}
-
+/// A builder that receives the [Drip] instance and its current state.
 typedef DBuilder<D extends Drip<DState>, DState> = Widget Function(
   D drip,
   DState state,
 );
 
+/// {@template dripper}
+///
+/// A consumer widget that rebuilds whenever its [Drip] emits a new state,
+/// and optionally fires a side-effect [listener].
+///
+/// Pass [create] to provide and own a [Drip] for the subtree without an
+/// outer [DripProvider] / [Dropper]; otherwise the drip is read from
+/// the nearest ancestor via [Dropper.of].
+///
+/// {@endtemplate}
 class Dripper<D extends Drip<DState>, DState> extends StatefulWidget {
+  /// Creates a [Dripper].
   const Dripper({
     super.key,
     this.create,
@@ -27,8 +29,13 @@ class Dripper<D extends Drip<DState>, DState> extends StatefulWidget {
     this.listener,
   });
 
+  /// Called on every state emission to produce the widget tree.
   final DBuilder<D, DState> builder;
+
+  /// When non-null, the [Dripper] also acts as a provider for this drip.
   final D? create;
+
+  /// Optional side-effect callback fired on each new state (no rebuild).
   final DListener<D, DState>? listener;
 
   @override

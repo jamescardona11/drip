@@ -4,52 +4,55 @@ import 'package:flutter/foundation.dart';
 
 /// {@template drip}
 ///
-/// This is the main class of the Drip package
-/// This class implements the [_BaseDrip] and is used to create a new Drip
-/// The Drip is used to manage the state of the application
+/// Minimal Cubit-style state holder.
+///
+/// Subclass and call [leak] to publish a new state. Every [Drip] exposes a
+/// broadcast [stateStream] so listeners outside the widget tree (tests,
+/// other services) can consume updates.
 ///
 /// {@endtemplate}
 abstract class Drip<DState> {
+  /// Creates a [Drip] seeded with [initialState].
   Drip(DState initialState) {
     _state = initialState;
     _controller = StreamController<DState>.broadcast(
       onListen: () {
-        // Add initialState to all new listeners
+        // Replay the current state to the first subscriber.
         _controller.add(_state);
       },
     );
   }
 
   late DState _state;
-
-  // late final StreamController<DState> _stateController;
   late final StreamController<DState> _controller;
 
-  /// This method is used to change the state of the Drip
-  /// Is important to use this method inside of drip and not outside
-  // ?? is necessary avoid leak a newState method when the newState is the same that the current?
+  /// Publishes [newState] as the next value of [state] and emits it on
+  /// [stateStream].
+  ///
+  /// Calling [leak] after [close] is a no-op (a debug warning is printed).
+  /// Intended to be invoked from inside the [Drip] subclass; subclasses
+  /// should expose intent-revealing methods (e.g. `increment`, `addItem`)
+  /// rather than letting callers leak arbitrary states.
   @protected
-  void leak(DState state) {
+  void leak(DState newState) {
     if (_controller.isClosed) {
-      debugPrint('Drip: emit() called after was closed');
+      debugPrint('Drip: leak() called after the drip was closed');
       return;
     }
-    _setState(state);
-    _controller.add(state);
+    _state = newState;
+    _controller.add(newState);
   }
 
+  /// Closes the underlying stream controller. Once closed, [leak] becomes a
+  /// no-op and existing subscribers receive `done`.
   void close() {
     _controller.close();
   }
 
-  /// Add the new state to _setState and _stateController
-  // ?? is necessary avoid set a newState when the newState is the same that the current?
-  void _setState(DState state) {
-    _state = state;
-  }
-
-  /// Return the current state
+  /// The current state.
   DState get state => _state;
 
+  /// A broadcast stream of state updates. The first subscriber receives the
+  /// current [state] immediately on subscription.
   Stream<DState> get stateStream => _controller.stream;
 }

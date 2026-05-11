@@ -24,12 +24,13 @@
 
 | | drip | Cubit (bloc) | Riverpod |
 |---|---|---|---|
-| Core lines of code | ~80 | thousands | thousands |
+| Published archive | **~78 KB** | ~250 KB+ | ~300 KB+ |
 | Events / reducers | no | yes (events optional in Cubit) | no |
 | Selector widget | built-in | `BlocSelector` | `ref.watch(provider.select)` |
 | **Computed / derived state** | **built-in (`ComputedDrip`)** | manual (re-emit by hand) | `Provider` derivation |
+| **Async state (loading/data/error)** | **built-in (`AsyncDrip<T>` + sealed states)** | manual states per Cubit | `AsyncValue<T>` |
 | Code gen needed | never | optional | optional |
-| Learning surface | one class + one helper + four widgets | many | many |
+| Learning surface | one base class + two specialisations + four widgets | many | many |
 
 Drip is intentionally a small library, not a framework. If you need devtools, persistence, async value handling, or sophisticated dependency injection, reach for Riverpod or Bloc. If you want the simplest "state holder + stream" possible, Drip fits.
 
@@ -236,6 +237,19 @@ Available hooks: `onCreate`, `onChange(previous, next)`, `onClose`.
 
 - [Counter](https://github.com/jamescardona11/drip/tree/main/example/counter_app) — minimal `Drip<S>` with `Dripper` and `DropWidget`
 - [Todo](https://github.com/jamescardona11/drip/tree/main/example/todo_app) — list management, multiple actions, custom state class
+
+## What's next
+
+The library is intentionally small. These features are being considered for the next minor releases — open an issue with a `+1` to vote:
+
+- **`DripFamily<K, D>`** — parametrized factories. `userFamily(userId)` returns the same `Drip` for the same key, with explicit `dispose(key)` / `disposeAll()`. Fills the Riverpod `family` niche in one class.
+- **`RewindableDrip<S>`** — circular history buffer with `rewind()` / `forward()` and bounded `historySize`. Brings back the `MemoryInterceptor` idea from `0.0.1` as a first-class subclass.
+- **`PersistedDrip<S>`** — opt-in hydration via a pluggable `DripStorage` adapter (works with `shared_preferences`, `hive`, in-memory, or your own). Hydrates state on construction and persists on every `leak`.
+- **DripDevTools extension** — inspect the active drips, their current state, and the observer chain from Flutter DevTools. Built on top of `DripObserver`, no app instrumentation required.
+- **Generated `MultiProvider` builders** — codegen sugar to declare a list of drips and get the wired-up provider tree, while keeping codegen strictly optional.
+- **`Drip.dispatch((state) => newState)`** — single-call mutation helper to skip the typical `void increment() => leak(state + 1)` boilerplate for one-liners.
+
+If you want one of these now or have ideas for others, please open an issue.
 
 ## Maintainers
 

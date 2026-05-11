@@ -1,8 +1,9 @@
+import 'package:drip/src/drip_core.dart';
+import 'package:drip/src/widgets/widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import '../drip_core/drip_core.dart';
-import '../drip_misc/drip_misc.dart';
-import '../widgets/drip_listener.dart';
+import 'dripping.dart';
 
 /// {@template drop}
 ///
@@ -13,15 +14,17 @@ import '../widgets/drip_listener.dart';
 ///
 /// {@endtemplate}
 
+typedef Selector<DState, T> = T Function(DState state);
+typedef SBuilder<D extends Drip, SelectedState> = Widget Function(D drip, SelectedState data);
+
 class DropWidget<D extends Drip<DState>, DState, SelectedState> extends StatefulWidget {
-  /// default constructor
   const DropWidget({
     super.key,
     required this.builder,
     required this.selector,
   });
 
-  final SBuilder<SelectedState> builder;
+  final SBuilder<D, SelectedState> builder;
   final Selector<DState, SelectedState> selector;
 
   @override
@@ -35,18 +38,28 @@ class _DropWidgetState<D extends Drip<DState>, DState, SelectedState> extends St
   @override
   void initState() {
     super.initState();
-    _drip = DripProvider.of<D>(context);
+    _drip = Dropper.of<D>(context);
     _state = widget.selector(_drip.state);
   }
 
   @override
   Widget build(BuildContext context) {
-    return DripListener<D, DState>(
+    return Dripping<D, DState>(
       listener: (context, state) {
         final selectedState = widget.selector(state);
-        if (_state != selectedState) setState(() => _state = selectedState);
+        if (selectedState is List && !listEquals(selectedState, _state as List)) {
+          _update(selectedState);
+        } else if (selectedState is Map && !mapEquals(selectedState, _state as Map)) {
+          _update(selectedState);
+        } else if (selectedState is! List && selectedState is! Map && _state != selectedState) {
+          _update(selectedState);
+        }
       },
-      child: widget.builder(context, _state),
+      child: widget.builder(_drip, _state),
     );
+  }
+
+  void _update(SelectedState selectedState) {
+    setState(() => _state = selectedState);
   }
 }

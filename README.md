@@ -37,7 +37,7 @@ drip: ^latest_version
 ## Basic Usage
 
 ```dart
-DripProvider<DripCounter>(
+Dropper<DripCounter>(
   create: (_) => DripCounter(),
   child: DripCounterPage(),
 )
@@ -58,7 +58,7 @@ class DripCounterPage extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                DripProvider.of<DripCounter>(context).increment();
+                Dropper.of<DripCounter>(context).increment();
               },
               child: const Text('Add +'),
             ),

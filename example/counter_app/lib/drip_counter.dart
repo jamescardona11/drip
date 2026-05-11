@@ -3,31 +3,19 @@
 import 'package:drip/drip.dart';
 
 class DripCounter extends Drip<DripCounterState> {
-  DripCounter()
-      : super(DripCounterState(), interceptors: [
-          MemoryInterceptor<DripCounterState>(historySize: 5),
-        ]);
+  DripCounter() : super(DripCounterState());
 
   void freeze() {
     print('freeze');
     leak(state.copyWith(str: '${state.count}'));
   }
 
-  @override
-  Stream<DripCounterState> mutableStateOf(event, state) async* {
-    if (event is ClearEvent) {
-      print('Clear');
-      yield state.copyWith(count: 0);
-    }
+  void clear() {
+    leak(state.copyWith(count: 0));
   }
-}
 
-class ClearEvent extends DripEvent<DripCounterState> {}
-
-class IncrementCountAction extends DripAction<DripCounterState> {
-  @override
-  Stream<DripCounterState> call(DripCounterState state) async* {
-    yield state.copyWith(count: state.count + 1);
+  void increment() {
+    leak(state.copyWith(count: state.count + 1));
   }
 }
 

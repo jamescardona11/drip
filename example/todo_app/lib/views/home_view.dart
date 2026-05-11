@@ -22,6 +22,7 @@ class _HomeViewState extends State<HomeView> {
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Dripper<DripToDo, DripToDoState>(
+          create: DripToDo(),
           builder: (drip, state) {
             return Stack(
               children: [
@@ -68,7 +69,7 @@ class _HomeViewState extends State<HomeView> {
                             // to show how can call methods from drip
                             toDoChanged: () => drip.handleToDoChange(state.toDos[index].id),
                             // other way to handle the state mutation, the event trigger drip.mutableStateOf
-                            toDoDeleted: () => drip.dispatch(ToDoDeletedEvent(state.toDos[index].id)),
+                            toDoDeleted: () => drip.delete(state.toDos[index].id),
                           ),
                         ),
                       )
@@ -114,7 +115,7 @@ class _HomeViewState extends State<HomeView> {
                       ),
                       child: ElevatedButton(
                         onPressed: () {
-                          if (_todoController.text.isNotEmpty) drip.dispatch(DripAddNewToDo(_todoController.text));
+                          if (_todoController.text.isNotEmpty) drip.addNewToDoItem(_todoController.text);
                         },
                         style: ElevatedButton.styleFrom(
                           primary: blueColor,

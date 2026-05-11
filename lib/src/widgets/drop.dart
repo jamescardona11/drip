@@ -8,7 +8,7 @@ typedef Selector<DState, T> = T Function(DState state);
 
 /// A builder that receives the [Drip] instance and the value picked by a
 /// [Selector].
-typedef SBuilder<D extends Drip, SelectedState> = Widget Function(
+typedef SBuilder<D extends Drip<Object?>, SelectedState> = Widget Function(
   D drip,
   SelectedState data,
 );

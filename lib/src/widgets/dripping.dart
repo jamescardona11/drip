@@ -8,7 +8,10 @@ import '../drip_core.dart';
 /// A side-effect callback invoked when a [Drip] emits a new state.
 ///
 /// The first parameter is the [Drip] instance (not a [BuildContext]).
-typedef DListener<D extends Drip, DState> = void Function(D drip, DState state);
+typedef DListener<D extends Drip<Object?>, DState> = void Function(
+  D drip,
+  DState state,
+);
 
 /// {@template dripping}
 ///

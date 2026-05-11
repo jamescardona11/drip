@@ -3,8 +3,8 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   language:
     strict-casts: true
-    # strict-inference y strict-raw-types se habilitan en Fase 4 (hardening
-    # de generics sobre Drip / Dropper / widgets).
+    strict-inference: true
+    strict-raw-types: true
 
 linter:
   rules:

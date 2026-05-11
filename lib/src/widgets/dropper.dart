@@ -18,7 +18,7 @@ typedef DCreate<D> = D Function(BuildContext context);
 /// tied to the subtree lifecycle.
 ///
 /// {@endtemplate}
-class Dropper<D extends Drip> extends SingleChildStatelessWidget {
+class Dropper<D extends Drip<Object?>> extends SingleChildStatelessWidget {
   /// Creates a [Dropper] that exposes [drip] to its descendants.
   const Dropper({
     super.key,
@@ -37,7 +37,7 @@ class Dropper<D extends Drip> extends SingleChildStatelessWidget {
   /// When [listen] is true, the calling widget rebuilds whenever the
   /// provided drip *instance* changes (not on state emissions — for that
   /// use [Dripper] or [DropWidget]).
-  static D of<D extends Drip>(BuildContext context, {bool listen = false}) {
+  static D of<D extends Drip<Object?>>(BuildContext context, {bool listen = false}) {
     if (D == dynamic) {
       throw ProviderError();
     }
@@ -56,12 +56,12 @@ class Dropper<D extends Drip> extends SingleChildStatelessWidget {
   }
 
   /// Method to access to the [Drip] using the context
-  static D read<D extends Drip>(BuildContext context) {
+  static D read<D extends Drip<Object?>>(BuildContext context) {
     return of<D>(context);
   }
 
   /// Method to watch changes in the [Drip] using the context
-  static D watch<D extends Drip>(BuildContext context) {
+  static D watch<D extends Drip<Object?>>(BuildContext context) {
     return of<D>(context, listen: true);
   }
 
@@ -74,7 +74,7 @@ class Dropper<D extends Drip> extends SingleChildStatelessWidget {
   }
 }
 
-class _DropperIW<D extends Drip> extends InheritedWidget {
+class _DropperIW<D extends Drip<Object?>> extends InheritedWidget {
   const _DropperIW({
     super.key,
     required super.child,
@@ -114,11 +114,11 @@ class ProviderError extends Error {
 ///
 /// {@endtemplate}
 extension DripProviderX on BuildContext {
-  D read<D extends Drip>() {
+  D read<D extends Drip<Object?>>() {
     return Dropper.read<D>(this);
   }
 
-  D watch<D extends Drip>() {
+  D watch<D extends Drip<Object?>>() {
     return Dropper.watch<D>(this);
   }
 }
@@ -132,7 +132,7 @@ extension DripProviderX on BuildContext {
 /// position in the tree (created on mount, disposed when removed).
 ///
 /// {@endtemplate}
-class DripProvider<D extends Drip> extends StatelessWidget {
+class DripProvider<D extends Drip<Object?>> extends StatelessWidget {
   /// Creates a [DripProvider].
   const DripProvider({
     super.key,

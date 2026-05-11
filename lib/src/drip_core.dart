@@ -65,6 +65,12 @@ abstract class Drip<DState> {
     _controller.close();
   }
 
+  /// Whether [close] has been called on this drip.
+  ///
+  /// Useful as a guard for code that may outlive the [Drip], or in tests
+  /// that want to assert teardown happened.
+  bool get isClosed => _controller.isClosed;
+
   /// The current state.
   DState get state => _state;
 

@@ -19,14 +19,16 @@
 - **Stream-based.** Every `Drip` exposes a broadcast `stateStream` you can also consume outside the widget tree.
 - **Multi-provider built in.** Compose several `Drip`s through `MultiProvider` (powered by `package:nested`).
 - **Selector with memoization.** `DropWidget` rebuilds only when the value picked by your selector changes — supports `List`, `Map`, and primitive equality.
+- **Composable.** A `ComputedDrip` derives its state from one or more source drips. Edit a `user` drip and a `greeting` drip updates automatically — without a single line of glue. Computed drips can be sources for further computed drips.
 
 | | drip | Cubit (bloc) | Riverpod |
 |---|---|---|---|
-| Core lines of code | ~50 | thousands | thousands |
+| Core lines of code | ~80 | thousands | thousands |
 | Events / reducers | no | yes (events optional in Cubit) | no |
 | Selector widget | built-in | `BlocSelector` | `ref.watch(provider.select)` |
+| **Computed / derived state** | **built-in (`ComputedDrip`)** | manual (re-emit by hand) | `Provider` derivation |
 | Code gen needed | never | optional | optional |
-| Learning surface | one class, three widgets | many | many |
+| Learning surface | one class + one helper + four widgets | many | many |
 
 Drip is intentionally a small library, not a framework. If you need devtools, persistence, async value handling, or sophisticated dependency injection, reach for Riverpod or Bloc. If you want the simplest "state holder + stream" possible, Drip fits.
 
@@ -127,6 +129,38 @@ MultiProvider(
 ```
 
 `MultiProvider` is a thin alias over `Nested` from [`package:nested`](https://pub.dev/packages/nested), so the children compose without indentation hell.
+
+## Composing drips (computed state)
+
+Sometimes one piece of state is a function of others. Instead of hand-wiring `stream.listen → leak`, declare a `ComputedDrip`:
+
+```dart
+class UserDrip extends Drip<User> {
+  UserDrip() : super(User.empty());
+  void setName(String n) => leak(state.copyWith(name: n));
+}
+
+final user = UserDrip();
+
+// Inline form
+final greeting = ComputedDrip<String>(
+  initial: '',
+  sources: [user],
+  compute: () => 'Hello ${user.state.name}',
+);
+
+// Subclass form
+class GreetingDrip extends ComputedDrip<String> {
+  GreetingDrip(this.user) : super(
+        initial: '',
+        sources: [user],
+        compute: () => 'Hello ${user.state.name}',
+      );
+  final UserDrip user;
+}
+```
+
+A `ComputedDrip` is itself a `Drip`, so it can be **a source for further computed drips** — composition is transitive. It only re-emits when the new value differs from the current one (by `==`), and it cancels its source subscriptions on `close()`.
 
 ## Observability
 

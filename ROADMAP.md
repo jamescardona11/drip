@@ -13,9 +13,9 @@
 | 5. CI/CD (GitHub Actions + dependabot + badges) | ✅ done |
 | 6. Vida nueva (DripObserver) | ✅ done |
 | 7. Release `0.1.0` | ✅ versión final + fecha en CHANGELOG; pendiente sólo el `dart pub publish` real |
-| Extra — feature genial | ✅ `ComputedDrip<S>` (derived state) — el sello distintivo del paquete |
+| Extras — features distintivos | ✅ `ComputedDrip<S>` (derived state) + `AsyncDrip<T>` (sealed async state) |
 
-Final state on this branch: `flutter analyze` clean, `flutter test` 30/30 passing, `dart pub publish --dry-run` 0 warnings.
+Final state on this branch: `flutter analyze` clean, `flutter test` 43/43 passing, `dart pub publish --dry-run` 0 warnings.
 
 ## Arquitectura actual (post-pull)
 

@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Dripping<D, S>` — listener-only widget that does not rebuild its child on state changes.
 - `DripObserver` — global hook with `onCreate` / `onChange(previous, next)` / `onClose` callbacks. Default is a no-op; install via `Drip.observer = MyObserver()` to plug in logging, analytics, or undo history.
 - `ComputedDrip<S>` — a [`Drip`] whose value is derived from other drips. Automatically re-evaluates when any source emits; only re-emits on `!=`. Sources can themselves be `ComputedDrip`s, so composition is transitive. Closes its source subscriptions on `close()`. Fills the same niche as Riverpod's derived providers, with a single class and zero magic.
+- `AsyncDrip<T>` and the sealed `AsyncState<T>` (`AsyncIdle` / `AsyncLoading` / `AsyncData` / `AsyncError`) for async data. `AsyncDrip.run(() => future)` emits `Loading -> Data | Error` automatically; `AsyncLoading.previous` keeps the last successful value for stale-while-revalidate UIs. Designed for Dart 3 exhaustive pattern matching with `switch`.
 - `topics`, `repository`, and richer `description` in `pubspec.yaml` to improve pub.dev discoverability.
 - GitHub Actions CI: format check, analyze, tests with coverage, and `pub publish --dry-run`. Matrix on Flutter `stable` + `beta`.
 

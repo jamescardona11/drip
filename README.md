@@ -20,6 +20,7 @@
 - **Multi-provider built in.** Compose several `Drip`s through `MultiProvider` (powered by `package:nested`).
 - **Selector with memoization.** `DropWidget` rebuilds only when the value picked by your selector changes — supports `List`, `Map`, and primitive equality.
 - **Composable.** A `ComputedDrip` derives its state from one or more source drips. Edit a `user` drip and a `greeting` drip updates automatically — without a single line of glue. Computed drips can be sources for further computed drips.
+- **Async-aware.** `AsyncDrip<T>` ships a sealed `idle / loading / data / error` state with a `run(Future<T>)` helper. Switch over it with Dart 3 pattern matching — no third-party `AsyncValue` package, no glue code.
 
 | | drip | Cubit (bloc) | Riverpod |
 |---|---|---|---|
@@ -161,6 +162,36 @@ class GreetingDrip extends ComputedDrip<String> {
 ```
 
 A `ComputedDrip` is itself a `Drip`, so it can be **a source for further computed drips** — composition is transitive. It only re-emits when the new value differs from the current one (by `==`), and it cancels its source subscriptions on `close()`.
+
+## Async state with sealed pattern matching
+
+Most apps fetch things. Instead of inventing a third `loading/error` mechanism per feature, extend `AsyncDrip<T>` and let it sequence `Loading -> Data | Error` for you:
+
+```dart
+class UserDrip extends AsyncDrip<User> {
+  UserDrip(this._api);
+  final UserApi _api;
+
+  Future<void> load(int id) => run(() => _api.fetchUser(id));
+}
+```
+
+In the view, exhaustive `switch` on the four cases (Dart 3 pattern matching):
+
+```dart
+Dripper<UserDrip, AsyncState<User>>(
+  builder: (_, state) => switch (state) {
+    AsyncIdle()                    => const Text('Tap to load'),
+    AsyncLoading(:final previous)  => previous == null
+        ? const CircularProgressIndicator()
+        : Text('Refreshing: ${previous.name}'), // stale-while-revalidate
+    AsyncData(:final value)        => Text(value.name),
+    AsyncError(:final error)       => Text('Error: $error'),
+  },
+);
+```
+
+`AsyncLoading.previous` carries the last successful value so the UI can keep showing data while refreshing — a "stale-while-revalidate" pattern in three keystrokes. Use `state.dataOrNull` if you only ever care about the data, regardless of case.
 
 ## Observability
 

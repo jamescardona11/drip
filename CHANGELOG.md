@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-05-11
+
+### Added
+- `Drip.isClosed` getter — returns `true` after `close()` is called. Useful as a guard in code that may outlive a `Drip` (background tasks, observers) and in tests that want to assert teardown happened. The getter mirrors the `isClosed` that existed on `_BaseDrip` in 0.0.1; it was accidentally dropped in the refactor.
+
 ## [0.1.0] - 2026-05-11
 
 ### Changed

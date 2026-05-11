@@ -83,5 +83,13 @@ void main() {
 
       await expectLater(drip.stateStream, emitsDone);
     });
+
+    test('isClosed reflects close()', () {
+      final drip = _CounterDrip();
+      expect(drip.isClosed, isFalse);
+
+      drip.close();
+      expect(drip.isClosed, isTrue);
+    });
   });
 }

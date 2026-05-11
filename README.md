@@ -1,184 +1,157 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
-# DRIP
-
+# Drip
 
 <p align="center">
 <img src="https://github.com/jamescardona11/drip/blob/main/base_logo.png?raw=true" height="250" alt="Drip Package" />
 </p>
 
-Drip is a wrapper for InheritedWidget to be able to handle the state management using Streams.
-This is a personal project and is under-construction.
+**Minimalist Cubit-style state management for Flutter** — built on `Stream` + `InheritedWidget`. Drip is small on purpose: ~50 lines of core, three composable widgets, and a multi-provider out of the box.
 
-## Features
+## Why drip?
 
-- Divide the handlers in small `DripActions`
-- Provider different widgets to react a new changes in the state
-- Have the possibility to use Interceptor
+- **Tiny mental model.** Subclass `Drip<S>` and call `leak(newState)` to emit. That's it.
+- **No code generation, no boilerplate.** Plain Dart classes; no events, no reducers, no Freezed required.
+- **Stream-based.** Every `Drip` exposes a broadcast `stateStream` you can also consume outside the widget tree.
+- **Multi-provider built in.** Compose several `Drip`s through `MultiProvider` (powered by `package:nested`).
+- **Selector with memoization.** `DropWidget` rebuilds only when the value picked by your selector changes — supports `List`, `Map`, and primitive equality.
 
-## Getting started
+| | drip | Cubit (bloc) | Riverpod |
+|---|---|---|---|
+| Core lines of code | ~50 | thousands | thousands |
+| Events / reducers | no | yes (events optional in Cubit) | no |
+| Selector widget | built-in | `BlocSelector` | `ref.watch(provider.select)` |
+| Code gen needed | never | optional | optional |
+| Learning surface | one class, three widgets | many | many |
 
-Import this library into your project:
+Drip is intentionally a small library, not a framework. If you need devtools, persistence, async value handling, or sophisticated dependency injection, reach for Riverpod or Bloc. If you want the simplest "state holder + stream" possible, Drip fits.
+
+## Install
 
 ```yaml
-drip: ^latest_version
+dependencies:
+  drip: ^0.1.0
 ```
 
-## Basic Usage
+```dart
+import 'package:drip/drip.dart';
+```
+
+## Quickstart
+
+### 1. Define your state holder
 
 ```dart
-Dropper<DripCounter>(
-  create: (_) => DripCounter(),
-  child: DripCounterPage(),
+class CounterDrip extends Drip<int> {
+  CounterDrip() : super(0);
+
+  void increment() => leak(state + 1);
+  void reset()     => leak(0);
+}
+```
+
+### 2. Provide it to the widget tree
+
+```dart
+DripProvider<CounterDrip>(
+  create: (_) => CounterDrip(),
+  child: const CounterPage(),
 )
+```
 
+### 3. Consume it
 
-class DripCounterPage extends StatelessWidget {
-  const DripCounterPage({super.key});
+```dart
+class CounterPage extends StatelessWidget {
+  const CounterPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Dripper<DripCounter, int>(
-              builder: (context, state) => Text('Counter: ${state.count}'),
-            ),
-            TextButton(
-              onPressed: () {
-                Dropper.of<DripCounter>(context).increment();
-              },
-              child: const Text('Add +'),
-            ),
-          ]
+        child: Dripper<CounterDrip, int>(
+          builder: (drip, state) => Text('Counter: $state'),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.read<CounterDrip>().increment(),
+        child: const Icon(Icons.add),
       ),
     );
   }
 }
-
-
-
-class DripCounter extends Drip<int> {
-  DripCounter() : super(0);
-
-  void increment() {
-    print('Increment');
-    leak(state + 1);
-  }
-}
-
-
 ```
 
-#### DripActions
-DripActions allow us to execute code in isolation, as if it were an extension of the main Drip.
+## The three consumer widgets
+
+| Widget | Purpose | Rebuilds? |
+|---|---|---|
+| `Dripper<D, S>` | Builder + optional listener. Like `BlocConsumer`. | On every new state |
+| `Dripping<D, S>` | Listener only (side effects). | Never — `child` is rebuilt by its parent |
+| `DropWidget<D, S, T>` | Selector with memoization. | Only when `selector(state)` returns a new value |
 
 ```dart
-class IncrementCountAction extends DripAction<DripCounterState> {
-  @override
-  Stream<DripCounterState> call(DripCounterState state) async* {
-    yield state.copyWith(count: state.count + 1);
-  }
-}
+// Selector — rebuild only when the .count field changes,
+// even if other fields of CounterState are mutated.
+DropWidget<CounterDrip, CounterState, int>(
+  selector: (state) => state.count,
+  builder: (drip, count) => Text('$count'),
+)
 ```
 
-
-#### Interceptors
-
-Interceptors allow us to change or modify state before it is processed as an Action or Event.
+## Accessing a Drip from `BuildContext`
 
 ```dart
-class MemoryInterceptor<DState> extends BaseInterceptor<DState> {
-  MemoryInterceptor({
-    this.historySize = 50,
-  });
-
-  /// The size of the history
-  final int historySize;
-
-  /// The history list of the Drip
-  final List<DState> _history = [];
-
-  @override
-  Stream<DState> call(DripEvent event, DState state) async* {
-    if (event is UndoMemory<DState> && _history.isNotEmpty) {
-      yield _history.removeLast();
-    } else if (event is DrainMemory<DState>) {
-      _history.clear();
-      yield state;
-    } else {
-      if (_history.length >= historySize) {
-        _history.removeAt(0);
-      }
-      _history.add(state);
-      yield state;
-    }
-  }
-}
-
+final drip = context.read<CounterDrip>();   // no listening
+final drip = context.watch<CounterDrip>();  // listen to updates
+final drip = Dropper.of<CounterDrip>(context);
 ```
 
+## Multi-provider
 
-### Examples
+When several drips need to be available in the same subtree:
 
-1. [Counter](https://github.com/jamescardona11/drip/tree/main/example/counter_app): Simple example of use the drip
-2. [Todo](https://github.com/jamescardona11/drip/tree/main/example/todo_app): More complex example to use drip
+```dart
+MultiProvider(
+  children: [
+    Dropper<UserDrip>(drip: UserDrip()),
+    Dropper<CartDrip>(drip: CartDrip()),
+    Dropper<ThemeDrip>(drip: ThemeDrip()),
+  ],
+  child: const MyApp(),
+)
+```
 
+`MultiProvider` is a thin alias over `Nested` from [`package:nested`](https://pub.dev/packages/nested), so the children compose without indentation hell.
 
+## Mental model
 
-Flutter is a game-changing technology that will revolutionize not just development, but software itself. A big thank you to the Flutter team for building such an amazing platform 💙 
+```
+        ┌──────────────────────────────────────────────┐
+        │ Drip<S>                                      │
+        │   _state: S         leak(newState)           │
+        │   _controller: StreamController<S>.broadcast │
+        └──────────────────────────────────────────────┘
+                          │ stateStream
+                          ▼
+        ┌─────────────────────────────────────────────┐
+        │  Dropper<D>  (InheritedWidget provider)     │
+        └─────────────────────────────────────────────┘
+              │            │              │
+           Dripper      Dripping      DropWidget
+         (rebuild on  (side effect,  (rebuild on
+          new state)   no rebuild)    selector change)
+```
 
-<a href="https://github.com/flutter/flutter">
-  <img alt="Flutter"
-       src="https://github.com/jamescardona11/argo/blob/main/img/flutter_logo.png?raw=true" />
-</a>
+## Examples
 
-
-
+- [Counter](https://github.com/jamescardona11/drip/tree/main/example/counter_app) — minimal `Drip<S>` with `Dripper` and `DropWidget`
+- [Todo](https://github.com/jamescardona11/drip/tree/main/example/todo_app) — list management, multiple actions, custom state class
 
 ## Maintainers
 
 - [James Cardona](https://github.com/jamescardona11)
 
-You are welcome to contribute :3
-
-
-## TODO
-- Create test
-- Improve de readme
+Contributions welcome.
 
 ## License
 
-    MIT License
-    Copyright (c) 2023 James Cardona
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+MIT — see [LICENSE](./LICENSE).

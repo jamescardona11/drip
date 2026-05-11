@@ -1,6 +1,6 @@
 name: drip
 description: Minimalist Cubit-style state management for Flutter using Streams and InheritedWidget.
-version: 0.1.0-dev.1
+version: 0.1.0
 homepage: https://github.com/jamescardona11/drip
 repository: https://github.com/jamescardona11/drip
 topics:

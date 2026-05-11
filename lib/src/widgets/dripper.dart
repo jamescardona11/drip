@@ -14,7 +14,10 @@ import 'dropper.dart';
 ///
 /// {@endtemplate}
 
-typedef DBuilder<D extends Drip<DState>, DState> = Widget Function(D drip, DState state);
+typedef DBuilder<D extends Drip<DState>, DState> = Widget Function(
+  D drip,
+  DState state,
+);
 
 class Dripper<D extends Drip<DState>, DState> extends StatefulWidget {
   const Dripper({
@@ -32,7 +35,8 @@ class Dripper<D extends Drip<DState>, DState> extends StatefulWidget {
   State<Dripper<D, DState>> createState() => _DripperState<D, DState>();
 }
 
-class _DripperState<D extends Drip<DState>, DState> extends State<Dripper<D, DState>> {
+class _DripperState<D extends Drip<DState>, DState>
+    extends State<Dripper<D, DState>> {
   late D _drip;
 
   @override

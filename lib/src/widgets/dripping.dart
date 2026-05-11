@@ -23,7 +23,8 @@ class Dripping<D extends Drip<DState>, DState> extends StatefulWidget {
   State<Dripping<D, DState>> createState() => _DrippingState<D, DState>();
 }
 
-class _DrippingState<D extends Drip<DState>, DState> extends State<Dripping<D, DState>> {
+class _DrippingState<D extends Drip<DState>, DState>
+    extends State<Dripping<D, DState>> {
   StreamSubscription<DState>? _subscription;
   DState? _previousState;
   late D _drip;

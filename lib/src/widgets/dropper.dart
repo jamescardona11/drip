@@ -15,10 +15,10 @@ typedef DCreate<D> = D Function(BuildContext context);
 
 class Dropper<D extends Drip> extends SingleChildStatelessWidget {
   const Dropper({
-    Key? key,
+    super.key,
     required this.drip,
     super.child,
-  }) : super(key: key);
+  });
 
   final D drip;
 
@@ -29,7 +29,9 @@ class Dropper<D extends Drip> extends SingleChildStatelessWidget {
 
     final provider = listen
         ? context.dependOnInheritedWidgetOfExactType<_DropperIW<D>>()
-        : (context.getElementForInheritedWidgetOfExactType<_DropperIW<D>>()?.widget as _DropperIW<D>?);
+        : (context
+            .getElementForInheritedWidgetOfExactType<_DropperIW<D>>()
+            ?.widget as _DropperIW<D>?);
 
     if (provider == null) {
       throw ProviderError(D);
@@ -67,7 +69,8 @@ class _DropperIW<D extends Drip> extends InheritedWidget {
   final D drip;
 
   @override
-  bool updateShouldNotify(covariant _DropperIW<D> oldWidget) => drip != oldWidget.drip;
+  bool updateShouldNotify(covariant _DropperIW<D> oldWidget) =>
+      drip != oldWidget.drip;
 }
 
 class ProviderError extends Error {

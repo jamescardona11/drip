@@ -12,10 +12,12 @@ import 'package:flutter/foundation.dart';
 abstract class Drip<DState> {
   Drip(DState initialState) {
     _state = initialState;
-    _controller = StreamController<DState>.broadcast(onListen: () {
-      // Add initialState to all new listeners
-      _controller.add(_state);
-    });
+    _controller = StreamController<DState>.broadcast(
+      onListen: () {
+        // Add initialState to all new listeners
+        _controller.add(_state);
+      },
+    );
   }
 
   late DState _state;

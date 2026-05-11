@@ -15,9 +15,13 @@ import 'dripping.dart';
 /// {@endtemplate}
 
 typedef Selector<DState, T> = T Function(DState state);
-typedef SBuilder<D extends Drip, SelectedState> = Widget Function(D drip, SelectedState data);
+typedef SBuilder<D extends Drip, SelectedState> = Widget Function(
+  D drip,
+  SelectedState data,
+);
 
-class DropWidget<D extends Drip<DState>, DState, SelectedState> extends StatefulWidget {
+class DropWidget<D extends Drip<DState>, DState, SelectedState>
+    extends StatefulWidget {
   const DropWidget({
     super.key,
     required this.builder,
@@ -28,10 +32,12 @@ class DropWidget<D extends Drip<DState>, DState, SelectedState> extends Stateful
   final Selector<DState, SelectedState> selector;
 
   @override
-  State<DropWidget<D, DState, SelectedState>> createState() => _DropWidgetState<D, DState, SelectedState>();
+  State<DropWidget<D, DState, SelectedState>> createState() =>
+      _DropWidgetState<D, DState, SelectedState>();
 }
 
-class _DropWidgetState<D extends Drip<DState>, DState, SelectedState> extends State<DropWidget<D, DState, SelectedState>> {
+class _DropWidgetState<D extends Drip<DState>, DState, SelectedState>
+    extends State<DropWidget<D, DState, SelectedState>> {
   late D _drip;
   late SelectedState _state;
 
@@ -47,11 +53,15 @@ class _DropWidgetState<D extends Drip<DState>, DState, SelectedState> extends St
     return Dripping<D, DState>(
       listener: (context, state) {
         final selectedState = widget.selector(state);
-        if (selectedState is List && !listEquals(selectedState, _state as List)) {
+        if (selectedState is List &&
+            !listEquals(selectedState, _state as List)) {
           _update(selectedState);
-        } else if (selectedState is Map && !mapEquals(selectedState, _state as Map)) {
+        } else if (selectedState is Map &&
+            !mapEquals(selectedState, _state as Map)) {
           _update(selectedState);
-        } else if (selectedState is! List && selectedState is! Map && _state != selectedState) {
+        } else if (selectedState is! List &&
+            selectedState is! Map &&
+            _state != selectedState) {
           _update(selectedState);
         }
       },

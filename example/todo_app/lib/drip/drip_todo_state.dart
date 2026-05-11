@@ -41,6 +41,8 @@ class DripToDoState {
   bool operator ==(covariant DripToDoState other) {
     if (identical(this, other)) return true;
 
-    return listEquals(other.toDos, toDos) && other.searchText == searchText && other.deletedToDos == deletedToDos;
+    return listEquals(other.toDos, toDos) &&
+        other.searchText == searchText &&
+        other.deletedToDos == deletedToDos;
   }
 }

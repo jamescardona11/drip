@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../constants/colors.dart';
@@ -10,11 +9,11 @@ class ToDoItemWidget extends StatelessWidget {
   final VoidCallback? toDoDeleted;
 
   const ToDoItemWidget({
-    Key? key,
+    super.key,
     required this.todo,
     this.toDoChanged,
     this.toDoDeleted,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

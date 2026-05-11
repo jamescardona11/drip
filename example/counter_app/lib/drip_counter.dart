@@ -6,7 +6,6 @@ class DripCounter extends Drip<DripCounterState> {
   DripCounter() : super(DripCounterState());
 
   void freeze() {
-    print('freeze');
     leak(state.copyWith(str: '${state.count}'));
   }
 
@@ -34,7 +33,7 @@ class DripCounterState {
   }) {
     return DripCounterState(
       count: count ?? this.count,
-      strNum: str ?? this.strNum,
+      strNum: str ?? strNum,
     );
   }
 

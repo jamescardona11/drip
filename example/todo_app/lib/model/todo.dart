@@ -13,7 +13,9 @@ class ToDo {
   bool operator ==(covariant ToDo other) {
     if (identical(this, other)) return true;
 
-    return other.id == id && other.todoText == todoText && other.isDone == isDone;
+    return other.id == id &&
+        other.todoText == todoText &&
+        other.isDone == isDone;
   }
 
   @override

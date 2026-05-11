@@ -4,6 +4,12 @@
 <img src="https://github.com/jamescardona11/drip/blob/main/base_logo.png?raw=true" height="250" alt="Drip Package" />
 </p>
 
+<p align="center">
+<a href="https://github.com/jamescardona11/drip/actions/workflows/ci.yml"><img src="https://github.com/jamescardona11/drip/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+<a href="https://pub.dev/packages/drip"><img src="https://img.shields.io/pub/v/drip.svg" alt="pub package" /></a>
+<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT" /></a>
+</p>
+
 **Minimalist Cubit-style state management for Flutter** — built on `Stream` + `InheritedWidget`. Drip is small on purpose: ~50 lines of core, three composable widgets, and a multi-provider out of the box.
 
 ## Why drip?

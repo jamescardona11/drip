@@ -2,6 +2,20 @@
 
 > **Nota**: este roadmap fue reescrito tras hacer pull de `origin/main`. La rama venía con un refactor masivo (PR #2, `dev → main`) que **simplificó la API**: se eliminaron `DripEvent`, `DripAction`, `dispatch`, `BaseInterceptor`, `MemoryInterceptor` y todo el pipeline de eventos. Ahora `Drip` es Cubit-style (sólo `leak()`). El roadmap anterior apuntaba a la API vieja y quedó invalidado.
 
+## Progress (branch `feat/update-drip`)
+
+| Fase | Estado |
+|---|---|
+| 1. Bumps + ejemplos | ✅ done |
+| 2. README + CHANGELOG | ✅ done |
+| 3. Suite de tests (25 tests, 83.5% coverage) | ✅ done |
+| 4. Hardening de API (dartdoc, strict-raw-types, _setState inline) | ✅ done |
+| 5. CI/CD (GitHub Actions + dependabot + badges) | ✅ done |
+| 6. Vida nueva (DripObserver) | ✅ done |
+| 7. Release `0.1.0` | ⏳ pendiente — requiere push + `dart pub publish` (manual) |
+
+Final state on this branch: `flutter analyze` clean, `flutter test` 25/25 passing, `dart pub publish --dry-run` 0 warnings, archive 73 KB.
+
 ## Arquitectura actual (post-pull)
 
 ```

@@ -49,8 +49,11 @@ void main() {
       drip.setB([9, 9]);
       await tester.pumpAndSettle();
 
-      expect(builds, initialBuilds,
-          reason: 'selector returns same .a — must not rebuild');
+      expect(
+        builds,
+        initialBuilds,
+        reason: 'selector returns same .a — must not rebuild',
+      );
 
       // Now mutate the selected field.
       drip.setA(42);
@@ -88,8 +91,11 @@ void main() {
 
       drip.setB(<int>[1, 2, 3]);
       await tester.pumpAndSettle();
-      expect(builds, afterFirst,
-          reason: 'same list content — listEquals=true, no rebuild');
+      expect(
+        builds,
+        afterFirst,
+        reason: 'same list content — listEquals=true, no rebuild',
+      );
 
       // Different content — must rebuild.
       drip.setB(<int>[1, 2]);
@@ -121,8 +127,11 @@ void main() {
       // Same content, different instance.
       drip.mutate(<String, int>{'a': 1});
       await tester.pumpAndSettle();
-      expect(builds, initialBuilds,
-          reason: 'mapEquals=true on equal maps');
+      expect(
+        builds,
+        initialBuilds,
+        reason: 'mapEquals=true on equal maps',
+      );
 
       drip.mutate(<String, int>{'a': 2});
       await tester.pumpAndSettle();

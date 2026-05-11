@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:drip/drip.dart';
 import 'package:flutter_test/flutter_test.dart';
 

@@ -3,8 +3,6 @@ import 'package:drip/src/widgets/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import 'dripping.dart';
-
 /// {@template drop}
 ///
 /// A widget that listens to a [Drip] and rebuilds when the [Drip] emits a new state.
